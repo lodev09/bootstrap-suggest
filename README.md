@@ -13,7 +13,7 @@ A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textb
 ```
 
 ### Data
-```
+```javascript
 var users = [
   {username: 'lodev09', fullname: 'Jovanni Lo'},
   {username: 'foo', fullname: 'Foo User'},
