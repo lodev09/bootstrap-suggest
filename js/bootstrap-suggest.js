@@ -56,6 +56,8 @@
 		},
 
 		__getCaretPos: function(posStart) {
+			// https://github.com/component/textarea-caret-position/blob/master/index.js
+
 			// The properties that we copy into a mirrored div.
 			// Note that some browsers, such as Firefox,
 			// do not concatenate properties, i.e. padding-top, bottom etc. -> padding,
