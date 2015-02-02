@@ -322,7 +322,7 @@
 				el = $el.get(0),
 				val = $el.val(),
 				item = this.get(index),
-				setCaretPos = this._keyPos + item.value.toString().length + 1;
+				setCaretPos = this._keyPos + item.value.length + 1;
 
 			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(el.selectionStart));
 
@@ -345,7 +345,7 @@
 			var $item = this.$items.eq(index);
 			return {
 				text: $item.children('a:first').text(),
-				value: $item.data('value'),
+				value: $item.attr('data-value'),
 				index: index,
 				$element: $item
 			};
