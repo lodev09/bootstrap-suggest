@@ -228,6 +228,7 @@
 				.on('click', function(e) {
 					e.preventDefault();
 					that.__select($(this).index());
+					that.$element.focus();
 				})
 				.on('mouseover', function(e) {
 					that.$element.off('blur', blur);
