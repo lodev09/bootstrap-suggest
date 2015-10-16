@@ -179,7 +179,7 @@
 
 			var $el = this.$element,
 				val = $el.val(),
-				currentPos = this.getInputSelection($el.get(0)).start;
+				currentPos = this.__getSelection($el.get(0)).start;
 			for (var i = currentPos; i >= 0; i--) {
 				var subChar = $.trim(val.substring(i-1, i));
 				if (!subChar) {
@@ -326,7 +326,7 @@
 				item = this.get(index),
 				setCaretPos = this._keyPos + item.value.length + 1;
 
-			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.getInputSelection(el).start));
+			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.__getSelection(el).start));
 
 			if (el.setSelectionRange) {
 				el.setSelectionRange(setCaretPos, setCaretPos);
@@ -342,7 +342,7 @@
 
 			this.hide();
 		},
-		getInputSelection: function(el)
+		__getSelection: function(el)
 		{
 		    var start = 0,
 		        end = 0,
@@ -352,17 +352,13 @@
 		        len,
 		        endRange;
 
-		    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number")
-		    {
+		    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
 		        start = el.selectionStart;
 		        end = el.selectionEnd;
-		    }
-		    else
-		    {
+		    } else {
 		        range = document.selection.createRange();
 
-		        if (range && range.parentElement() == el)
-		        {
+		        if (range && range.parentElement() == el) {
 		            len = el.value.length;
 		            normalizedValue = el.value.replace(/\r\n/g, "\n");
 
@@ -376,21 +372,15 @@
 		            endRange = el.createTextRange();
 		            endRange.collapse(false);
 
-		            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1)
-		            {
+		            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
 		                start = end = len;
-		            }
-		            else
-		            {
+		            } else {
 		                start = -textInputRange.moveStart("character", -len);
 		                start += normalizedValue.slice(0, start).split("\n").length - 1;
 
-		                if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1)
-		                {
+		                if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
 		                    end = len;
-		                }
-		                else
-		                {
+		                } else {
 		                    end = -textInputRange.moveEnd("character", -len);
 		                    end += normalizedValue.slice(0, end).split("\n").length - 1;
 		                }
