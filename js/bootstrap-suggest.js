@@ -34,8 +34,8 @@
 		this._keyPos = -1;
 
 		this.$dropdown = $('<div />', {
-			class: 'dropdown suggest',
-			html: $('<ul />', {class: 'dropdown-menu', role: 'menu'}),
+			'class': 'dropdown suggest',
+			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
 
@@ -56,6 +56,8 @@
 		},
 
 		__getCaretPos: function(posStart) {
+			// https://github.com/component/textarea-caret-position/blob/master/index.js
+
 			// The properties that we copy into a mirrored div.
 			// Note that some browsers, such as Firefox,
 			// do not concatenate properties, i.e. padding-top, bottom etc. -> padding,
@@ -117,13 +119,14 @@
 			  style.position = 'absolute';  // required to return coordinates properly
 			  style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
-			  // transfer the element's properties to the div
-			  properties.forEach(function (prop) {
-			    style[prop] = computed[prop];
+			    // transfer the element's properties to the div
+			  $.each(properties, function (index, value)
+			  {
+			      style[value] = computed[value];
 			  });
 
 			  if (isFirefox) {
-			    style.width = parseInt(computed.width) - 2 + 'px'  // Firefox adds 2 pixels to the padding - https://bugzilla.mozilla.org/show_bug.cgi?id=753662
+			    style.width = parseInt(computed.width) - 2 + 'px';  // Firefox adds 2 pixels to the padding - https://bugzilla.mozilla.org/show_bug.cgi?id=753662
 			    // Firefox lies about the overflow property for textareas: https://bugzilla.mozilla.org/show_bug.cgi?id=984275
 			    if (element.scrollHeight > parseInt(computed.height))
 			      style.overflowY = 'scroll';
@@ -176,15 +179,13 @@
 
 			var $el = this.$element,
 				val = $el.val(),
-				currentPos = $el.get(0).selectionStart;
-
+				currentPos = this.__getSelection($el.get(0)).start;
 			for (var i = currentPos; i >= 0; i--) {
 				var subChar = $.trim(val.substring(i-1, i));
 				if (!subChar) {
 					this.hide();
 					break;
 				}
-
 				if (subChar === this.key && $.trim(val.substring(i-2, i-1)) == '') {
 					this.query = val.substring(i, currentPos);
 					this._queryPos = [i, currentPos];
@@ -226,6 +227,7 @@
 				.on('click', function(e) {
 					e.preventDefault();
 					that.__select($(this).index());
+					that.$element.focus();
 				})
 				.on('mouseover', function(e) {
 					that.$element.off('blur', blur);
@@ -324,7 +326,7 @@
 				item = this.get(index),
 				setCaretPos = this._keyPos + item.value.length + 1;
 
-			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(el.selectionStart));
+			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.__getSelection(el).start));
 
 			if (el.setSelectionRange) {
 				el.setSelectionRange(setCaretPos, setCaretPos);
@@ -340,7 +342,57 @@
 
 			this.hide();
 		},
+		__getSelection: function(el)
+		{
+		    var start = 0,
+		        end = 0,
+		        normalizedValue,
+		        range,
+		        textInputRange,
+		        len,
+		        endRange;
 
+		    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
+		        start = el.selectionStart;
+		        end = el.selectionEnd;
+		    } else {
+		        range = document.selection.createRange();
+
+		        if (range && range.parentElement() == el) {
+		            len = el.value.length;
+		            normalizedValue = el.value.replace(/\r\n/g, "\n");
+
+		            // Create a working TextRange that lives only in the input
+		            textInputRange = el.createTextRange();
+		            textInputRange.moveToBookmark(range.getBookmark());
+
+		            // Check if the start and end of the selection are at the very end
+		            // of the input, since moveStart/moveEnd doesn't return what we want
+		            // in those cases
+		            endRange = el.createTextRange();
+		            endRange.collapse(false);
+
+		            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
+		                start = end = len;
+		            } else {
+		                start = -textInputRange.moveStart("character", -len);
+		                start += normalizedValue.slice(0, start).split("\n").length - 1;
+
+		                if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
+		                    end = len;
+		                } else {
+		                    end = -textInputRange.moveEnd("character", -len);
+		                    end += normalizedValue.slice(0, end).split("\n").length - 1;
+		                }
+		            }
+		        }
+		    }
+
+		    return {
+		        start: start,
+		        end: end
+		    };
+		},
 		get: function(index) {
 			var $item = this.$items.eq(index);
 			return {
@@ -366,7 +418,6 @@
 						value = value.toLowerCase();
 						q = q.toLowerCase();
 					}
-
 		            return value.indexOf(q) != -1;
 		        }).slice(0, options.filter.limit).removeClass('hidden active');
 		    } else this.$items.slice(0, options.filter.limit).removeClass('hidden active');
