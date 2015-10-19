@@ -486,7 +486,7 @@
 						}
 
 					} else {
-						position = typeof options.position == 'function' ? options.position(el, caretPos) : options.position;
+						position = $.extend(position, typeof options.position == 'function' ? options.position(el, caretPos) : options.position);
 					}
 					
 					$dropdownMenu.css(position);
