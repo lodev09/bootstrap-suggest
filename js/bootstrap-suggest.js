@@ -32,9 +32,9 @@
 		this.query = '';
 		this._queryPos = [];
 		this._keyPos = -1;
-
+            
 		this.$dropdown = $('<div />', {
-			'class': 'dropdown suggest',
+		    'class': 'dropdown suggest ' + this.options.dropdownClasses,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
@@ -452,13 +452,16 @@
 				el = $el.get(0);
 
 			if (!this.isShown) {
-				var caretPos = this.__getCaretPos(this._keyPos);
-				this.$dropdown
-					.addClass('open')
-					.find('.dropdown-menu').css({
-						'top': caretPos.top - el.scrollTop + 'px',
-						'left': caretPos.left - el.scrollLeft + 'px'
-					});
+				
+				this.$dropdown.addClass('open');
+				if (this.options.putDropdownBelowCaret) {
+				    var caretPos = this.__getCaretPos(this._keyPos);
+				    this.$dropdown.find('.dropdown-menu').css({
+				    	'top': caretPos.top - el.scrollTop + 'px',
+				    	'left': caretPos.left - el.scrollLeft + 'px'
+				    });
+				}
+					
 				this.isShown = true;
 				$el.trigger($.extend({type: 'suggest.show'}, this));
 			}
@@ -529,7 +532,8 @@
 			casesensitive: false,
 			limit: 5
 		},
-
+		dropdownClasses: '', //add another css class to the dropdown container. you can add 'dropup' to make the drop down to go bottom up (aka, dropup-menu), if you do it, make sure putDropdownBelowCaret: false
+		putDropdownBelowCaret: true, //true to maintain backwards compatibility
 		// events hook
 		onshow: function(e) {},
 		onselect: function(e, item) {},
