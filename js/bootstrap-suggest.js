@@ -449,21 +449,47 @@
 
 		show: function() {
 			var $el = this.$element,
-				el = $el.get(0);
+				$dropdownMenu = this.$dropdown.find('.dropdown-menu'),
+				el = $el.get(0),
+				options = this.options,
+				caretPos,
+				position = {
+					top: 'auto',
+					bottom: 'auto',
+					left: 'auto',
+					right: 'auto'
+				};
 
 			if (!this.isShown) {
 				
 				this.$dropdown.addClass('open');
-				if (this.options.position !== false) {
-					var caretPos = this.__getCaretPos(this._keyPos);
-					if(this.options.position === 'default') {
-						this.$dropdown.find('.dropdown-menu').css({
-				    		'top': caretPos.top - el.scrollTop + 'px',
-				    		'left': caretPos.left - el.scrollLeft + 'px'
-				    	});
+				if (options.position !== false) {
+
+					caretPos = this.__getCaretPos(this._keyPos);
+
+					if (typeof options.position == 'string') {
+						switch (options.position) {
+							case 'bottom':
+								position.top = $el.outerHeight() - parseFloat($dropdownMenu.css('margin-top'));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'top':
+								position.top = -($dropdownMenu.outerHeight(true) + parseFloat($dropdownMenu.css('margin-top')));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'caret':
+								position.top = caretPos.top - el.scrollTop;
+								position.left = caretPos.left - el.scrollLeft;
+								break;
+						}
+
 					} else {
-						this.$dropdown.find('.dropdown-menu').css(this.options.position(el, caretPos));
+						position = typeof options.position == 'function' ? options.position(el, caretPos) : options.position;
 					}
+					
+					$dropdownMenu.css(position);
 				}
 				
 				this.isShown = true;
@@ -536,8 +562,8 @@
 			casesensitive: false,
 			limit: 5
 		},
-		dropdownClass: '', //add another css class to the dropdown container. you can add 'dropup' to make the drop down to go bottom up (aka, dropup-menu), if you do it, make sure putDropdownBelowCaret: position
-		position: 'default', //'default' / false / function(el, caretPos) { return { bottom: 'auto', left: 'auto', right: 'auto', top: 'auto'}; } //using caretPos, user can compute where the dropdown should go, should default to 'auto'
+		dropdownClass: '',
+		position: 'caret',
 		// events hook
 		onshow: function(e) {},
 		onselect: function(e, item) {},
