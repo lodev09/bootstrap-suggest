@@ -34,7 +34,7 @@
 		this._keyPos = -1;
             
 		this.$dropdown = $('<div />', {
-		    'class': 'dropdown suggest ' + this.options.dropdownClasses,
+		    'class': 'dropdown suggest ' + this.options.dropdownClass,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
@@ -454,14 +454,18 @@
 			if (!this.isShown) {
 				
 				this.$dropdown.addClass('open');
-				if (this.options.putDropdownBelowCaret) {
-				    var caretPos = this.__getCaretPos(this._keyPos);
-				    this.$dropdown.find('.dropdown-menu').css({
-				    	'top': caretPos.top - el.scrollTop + 'px',
-				    	'left': caretPos.left - el.scrollLeft + 'px'
-				    });
+				if (this.options.position !== false) {
+					var caretPos = this.__getCaretPos(this._keyPos);
+					if(this.options.position === 'default') {
+						this.$dropdown.find('.dropdown-menu').css({
+				    		'top': caretPos.top - el.scrollTop + 'px',
+				    		'left': caretPos.left - el.scrollLeft + 'px'
+				    	});
+					} else {
+						this.$dropdown.find('.dropdown-menu').css(this.options.position(el, caretPos));
+					}
 				}
-					
+				
 				this.isShown = true;
 				$el.trigger($.extend({type: 'suggest.show'}, this));
 			}
@@ -532,8 +536,8 @@
 			casesensitive: false,
 			limit: 5
 		},
-		dropdownClasses: '', //add another css class to the dropdown container. you can add 'dropup' to make the drop down to go bottom up (aka, dropup-menu), if you do it, make sure putDropdownBelowCaret: false
-		putDropdownBelowCaret: true, //true to maintain backwards compatibility
+		dropdownClass: '', //add another css class to the dropdown container. you can add 'dropup' to make the drop down to go bottom up (aka, dropup-menu), if you do it, make sure putDropdownBelowCaret: position
+		position: 'default', //'default' / false / function(el, caretPos) { return { bottom: 'auto', left: 'auto', right: 'auto', top: 'auto'}; } //using caretPos, user can compute where the dropdown should go, should default to 'auto'
 		// events hook
 		onshow: function(e) {},
 		onselect: function(e, item) {},
