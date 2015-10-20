@@ -113,15 +113,16 @@ $('#comment').suggest('@', {
 `$('#textarea').suggest({key: options, key2: options})`
 
 ### Options
-| option            | type           | default                          | description                                                                |
-| --                | ---            | ---                              | ---                                                                        |
-| data              | array          | []                               | an array of objects or string                                              |
-| map               | callback       | _undefined_                      | a callback function that is used to map the display and value of each item |
-| filter            | object         | { casesensitive: true, limit: 5} | option that will let you set the filter behaviour                          |
-| onshow(e)         | event callback | _none_                           | triggered when the dropdown is shown                                       |
-| onselect(e, item) | event callback | _none_                           | triggered after selecting the item                                         |
-| onlookup(e, item) | event callback | _none_                           | triggered when searching for an item                                       |
-
+| option            | type                   | default                          | description                                                                |
+| --                | ---                    | ---                              | ---                                                                        |
+| data              | array                  | []                               | an array of objects or string                                              |
+| map               | callback               | _undefined_                      | a callback function that is used to map the display and value of each item |
+| filter            | object                 | { casesensitive: true, limit: 5} | option that will let you set the filter behaviour                          |
+| onshow(e)         | event callback         | _none_                           | triggered when the dropdown is shown                                       |
+| onselect(e, item) | event callback         | _none_                           | triggered after selecting the item                                         |
+| onlookup(e, item) | event callback         | _none_                           | triggered when searching for an item                                       |
+| dropdownClass     | string                 | ""                               | additional class of the dropdown                                           |
+| position          | string/object/function | "caret"                          | position of the dropdown menu. string values: _bottom_, _top_, _caret_     |
 
 
 ### Events
