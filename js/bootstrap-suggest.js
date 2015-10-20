@@ -32,9 +32,9 @@
 		this.query = '';
 		this._queryPos = [];
 		this._keyPos = -1;
-
+            
 		this.$dropdown = $('<div />', {
-			'class': 'dropdown suggest',
+		    'class': 'dropdown suggest ' + this.options.dropdownClass,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
@@ -449,16 +449,49 @@
 
 		show: function() {
 			var $el = this.$element,
-				el = $el.get(0);
+				$dropdownMenu = this.$dropdown.find('.dropdown-menu'),
+				el = $el.get(0),
+				options = this.options,
+				caretPos,
+				position = {
+					top: 'auto',
+					bottom: 'auto',
+					left: 'auto',
+					right: 'auto'
+				};
 
 			if (!this.isShown) {
-				var caretPos = this.__getCaretPos(this._keyPos);
-				this.$dropdown
-					.addClass('open')
-					.find('.dropdown-menu').css({
-						'top': caretPos.top - el.scrollTop + 'px',
-						'left': caretPos.left - el.scrollLeft + 'px'
-					});
+				
+				this.$dropdown.addClass('open');
+				if (options.position !== false) {
+
+					caretPos = this.__getCaretPos(this._keyPos);
+
+					if (typeof options.position == 'string') {
+						switch (options.position) {
+							case 'bottom':
+								position.top = $el.outerHeight() - parseFloat($dropdownMenu.css('margin-top'));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'top':
+								position.top = -($dropdownMenu.outerHeight(true) + parseFloat($dropdownMenu.css('margin-top')));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'caret':
+								position.top = caretPos.top - el.scrollTop;
+								position.left = caretPos.left - el.scrollLeft;
+								break;
+						}
+
+					} else {
+						position = $.extend(position, typeof options.position == 'function' ? options.position(el, caretPos) : options.position);
+					}
+					
+					$dropdownMenu.css(position);
+				}
+				
 				this.isShown = true;
 				$el.trigger($.extend({type: 'suggest.show'}, this));
 			}
@@ -529,7 +562,8 @@
 			casesensitive: false,
 			limit: 5
 		},
-
+		dropdownClass: '',
+		position: 'caret',
 		// events hook
 		onshow: function(e) {},
 		onselect: function(e, item) {},
