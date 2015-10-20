@@ -32,9 +32,9 @@
 		this.query = '';
 		this._queryPos = [];
 		this._keyPos = -1;
-
+            
 		this.$dropdown = $('<div />', {
-			'class': 'dropdown suggest',
+		    'class': 'dropdown suggest ' + this.options.dropdownClass,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
@@ -342,25 +342,28 @@
 
 			this.hide();
 		},
-		__getSelection: function(el)
+		__getSelection: function (el)
 		{
 		    var start = 0,
 		        end = 0,
+                rawValue,
 		        normalizedValue,
 		        range,
 		        textInputRange,
 		        len,
 		        endRange;
-
 		    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
 		        start = el.selectionStart;
 		        end = el.selectionEnd;
 		    } else {
+		        el.focus();
+
 		        range = document.selection.createRange();
 
-		        if (range && range.parentElement() == el) {
-		            len = el.value.length;
-		            normalizedValue = el.value.replace(/\r\n/g, "\n");
+		        if (range && range.parentElement() === el) {
+		            rawValue = el.value;
+		            len = rawValue.length;
+		            normalizedValue = rawValue.replace(/\r\n/g, "\n");
 
 		            // Create a working TextRange that lives only in the input
 		            textInputRange = el.createTextRange();
@@ -385,9 +388,13 @@
 		                    end += normalizedValue.slice(0, end).split("\n").length - 1;
 		                }
 		            }
+
+		            /// normalize newlines
+		            start -= (rawValue.substring(0, start).split('\r\n').length - 1);
+		            end -= (rawValue.substring(0, end).split('\r\n').length - 1);
+		            /// normalize newlines
 		        }
 		    }
-
 		    return {
 		        start: start,
 		        end: end
@@ -442,16 +449,49 @@
 
 		show: function() {
 			var $el = this.$element,
-				el = $el.get(0);
+				$dropdownMenu = this.$dropdown.find('.dropdown-menu'),
+				el = $el.get(0),
+				options = this.options,
+				caretPos,
+				position = {
+					top: 'auto',
+					bottom: 'auto',
+					left: 'auto',
+					right: 'auto'
+				};
 
 			if (!this.isShown) {
-				var caretPos = this.__getCaretPos(this._keyPos);
-				this.$dropdown
-					.addClass('open')
-					.find('.dropdown-menu').css({
-						'top': caretPos.top - el.scrollTop + 'px',
-						'left': caretPos.left - el.scrollLeft + 'px'
-					});
+				
+				this.$dropdown.addClass('open');
+				if (options.position !== false) {
+
+					caretPos = this.__getCaretPos(this._keyPos);
+
+					if (typeof options.position == 'string') {
+						switch (options.position) {
+							case 'bottom':
+								position.top = $el.outerHeight() - parseFloat($dropdownMenu.css('margin-top'));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'top':
+								position.top = -($dropdownMenu.outerHeight(true) + parseFloat($dropdownMenu.css('margin-top')));
+								position.left = 0;
+								position.right = 0;
+								break;
+							case 'caret':
+								position.top = caretPos.top - el.scrollTop;
+								position.left = caretPos.left - el.scrollLeft;
+								break;
+						}
+
+					} else {
+						position = $.extend(position, typeof options.position == 'function' ? options.position(el, caretPos) : options.position);
+					}
+					
+					$dropdownMenu.css(position);
+				}
+				
 				this.isShown = true;
 				$el.trigger($.extend({type: 'suggest.show'}, this));
 			}
@@ -522,7 +562,8 @@
 			casesensitive: false,
 			limit: 5
 		},
-
+		dropdownClass: '',
+		position: 'caret',
 		// events hook
 		onshow: function(e) {},
 		onselect: function(e, item) {},
