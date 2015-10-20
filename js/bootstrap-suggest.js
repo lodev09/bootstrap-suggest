@@ -34,7 +34,7 @@
 		this._keyPos = -1;
             
 		this.$dropdown = $('<div />', {
-		    'class': 'dropdown suggest ' + this.options.dropdownClass,
+		    	'class': 'dropdown suggest ' + this.options.dropdownClass,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
