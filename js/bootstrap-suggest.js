@@ -190,49 +190,35 @@
 					this.query = val.substring(i, currentPos);
 					this._queryPos = [i, currentPos];
 					this._keyPos = i;
-					$resultItems = this.lookup(this.query);
-
-					if ($resultItems.length) this.show();
-					else this.hide();
+					this.lookup(this.query);
 					break;
 				}
 			}
 		},
 
 		__getVisibleItems: function() {
-			return this.$items.not('.hidden');
+      return this.$items ? this.$items.not('.hidden') : $();
 		},
 
 		__build: function() {
-			var elems = [], _data, $item,
+			var elems = [], $item,
 				$dropdown = this.$dropdown,
 				that = this;
-
-			if (typeof this.options.data == 'function') {
-				_data = this.options.data();
-			} else _data = this.options.data;
-
-			if (_data && _data instanceof Array) {
-				for (var i in _data) {
-					if ($item = this.__mapItem(_data[i]))
-						$dropdown.find('.dropdown-menu').append($item.addClass('hidden'));
-				}
-			}
 
 			var blur = function(e) {
 				that.hide();
 			}
 
-			this.$items = $dropdown.find('li:has(a)')
-				.on('click', function(e) {
+			$dropdown
+				.on('click', 'li:has(a)', function(e) {
 					e.preventDefault();
 					that.__select($(this).index());
 					that.$element.focus();
 				})
-				.on('mouseover', function(e) {
+				.on('mouseover', 'li:has(a)', function(e) {
 					that.$element.off('blur', blur);
 				})
-				.on('mouseout', function(e) {
+				.on('mouseout', 'li:has(a)', function(e) {
 					that.$element.on('blur', blur);
 				});
 
@@ -342,6 +328,7 @@
 
 			this.hide();
 		},
+
 		__getSelection: function (el)
 		{
 		    var start = 0,
@@ -400,40 +387,92 @@
 		        end: end
 		    };
 		},
-		get: function(index) {
-			var $item = this.$items.eq(index);
-			return {
-				text: $item.children('a:first').text(),
-				value: $item.attr('data-value'),
-				index: index,
-				$element: $item
-			};
-		},
 
-		lookup: function(q) {
-			var options = this.options,
-				that = this,
-				$resultItems;
+    __buildItems: function(data) {
+      var $dropdownMenu = this.$dropdown.find('.dropdown-menu');
+      $dropdownMenu.empty();
+      if (data && data instanceof Array) {
+        for (var i in data) {
+          var $item = this.__mapItem(data[i]);
+          if ($item) {
+            $dropdownMenu.append($item);
+          }
+        }
+      }
+      return $dropdownMenu.find('li:has(a)');
+    },
 
+    __lookup: function(q, $resultItems) {
+      this.$element.trigger($.extend({type: 'suggest.lookup'}, this), [q, $resultItems]);
+      var active = $resultItems.eq(0).addClass('active');
+      if ($resultItems && $resultItems.length) {
+        this.show();
+      } else {
+        this.hide();
+      }
+    },
+
+    __filterData: function(q, data) {
+      var options = this.options;
 			this.$items.addClass('hidden');
-			if (q != "") {
-				this.$items.filter(function (index) {
-					var $this = $(this),
-						value = $this.find('a:first').text();
+      this.$items.filter(function (index) {
+        var $this = $(this),
+          value = $this.find('a:first').text();
 
-					if (!options.filter.casesensitive) {
-						value = value.toLowerCase();
-						q = q.toLowerCase();
-					}
-		            return value.indexOf(q) != -1;
-		        }).slice(0, options.filter.limit).removeClass('hidden active');
-		    } else this.$items.slice(0, options.filter.limit).removeClass('hidden active');
+        if (!options.filter.casesensitive) {
+          value = value.toLowerCase();
+          q = q.toLowerCase();
+        }
+        return value.indexOf(q) != -1;
+      }).slice(0, options.filter.limit).removeClass('hidden active');
+      return this.__getVisibleItems();
+    },
 
-		    $resultItems = this.__getVisibleItems();
-		    this.$element.trigger($.extend({type: 'suggest.lookup'}, this), [q, $resultItems]);
+    get: function(index) {
+      if(!this.$items) { return; }
+      var $item = this.$items.eq(index);
+      return {
+        text: $item.children('a:first').text(),
+        value: $item.attr('data-value'),
+        index: index,
+        $element: $item
+      };
+    },
 
-		    return $resultItems.eq(0).addClass('active');
-		},
+    lookup: function(q) {
+      var options = this.options,
+        that = this,
+        data;
+
+      if (typeof this.options.data == 'function') {
+        this.$items = undefined;
+        data = this.options.data(q);
+      } else {
+        data = this.options.data;
+      }
+
+      if(data && $.isFunction(data.promise)) {
+        data.done(function(data) {
+          if(data && data.length > options.filter.limit) {
+            data = data.slice(0, options.filter.limit);
+          }
+          that.$items = that.__buildItems(data);
+          that.__lookup(q, that.$items);
+        });
+      } else {
+        if(!this.$items) {
+          this.$items = this.__buildItems(data);
+        }
+        var items;
+        if (q === "") {
+          this.$items.slice(0, options.filter.limit).removeClass('hidden active');
+          items = this.$items;
+        } else {
+          items = this.__filterData(q, data);
+        }
+        this.__lookup(q, items);
+      }
+    },
 
 		load: function() {
 			this.__setListener();
@@ -443,7 +482,9 @@
 		hide: function() {
 			this.$dropdown.removeClass('open');
 			this.isShown = false;
-			this.$items.removeClass('active');
+      if(this.$items) {
+        this.$items.removeClass('active');
+      }
 			this._keyPos = -1;
 		},
 
