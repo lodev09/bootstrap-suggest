@@ -103,6 +103,25 @@ $('#comment').suggest('@', {
 })
 ```
 
+### Init (with Ajax)
+Ajax is supported by having the data function return a <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> object. The function takes a single parameter containing the mention text string.
+
+```javascript
+$('#comment').suggest('@', {
+  data: function(q) {
+    if (q && q.length >= 3) {
+      return $.getJSON("users/lookup.json", { q:q });
+    }
+  },
+  map: function(user) {
+    return {
+      value: user.username,
+      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
+    }
+  }
+})
+```
+
       </div>
       <h2 id="api">API</h2>
       <div class="markdown">
@@ -115,7 +134,7 @@ $('#comment').suggest('@', {
 ### Options
 | option            | type                   | default                          | description                                                                |
 | --                | ---                    | ---                              | ---                                                                        |
-| data              | array                  | []                               | an array of objects or string                                              |
+| data              | array/function         | []                               | an array (of objects or string) or a callback function                     |
 | map               | callback               | _undefined_                      | a callback function that is used to map the display and value of each item |
 | filter            | object                 | { casesensitive: true, limit: 5} | option that will let you set the filter behaviour                          |
 | onshow(e)         | event callback         | _none_                           | triggered when the dropdown is shown                                       |
