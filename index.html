@@ -202,7 +202,7 @@ $('#comment').suggest('@', {
   		},
 
   		marked.setOptions({
-  			sanitize: true,
+  			sanitize: false,
   			highlight: function (code) {
   		    	return hljs.highlightAuto(code).value;
   		  	},
