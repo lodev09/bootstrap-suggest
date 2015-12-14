@@ -109,7 +109,7 @@ Ajax is supported by having the data function return a <a href="http://api.jquer
 ```javascript
 $('#comment').suggest('@', {
   data: function(q) {
-    if (q && q.length >= 3) {
+    if (q &amp;&amp; q.length &gt;= 3) {
       return $.getJSON("users/lookup.json", { q:q });
     }
   },
