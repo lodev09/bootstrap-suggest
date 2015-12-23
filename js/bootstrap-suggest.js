@@ -339,12 +339,11 @@
 			textInputRange,
 			len,
 			endRange;
+			el.focus();//in IE9 selectionStart will always be 9 if not focused(when selecting using the mouse)
 			if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
 				start = el.selectionStart;
 				end = el.selectionEnd;
 			} else {
-				el.focus();
-				
 				range = document.selection.createRange();
 				
 				if (range && range.parentElement() === el) {
