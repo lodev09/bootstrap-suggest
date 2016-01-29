@@ -32,7 +32,7 @@
 		this.query = '';
 		this._queryPos = [];
 		this._keyPos = -1;
-            
+
 		this.$dropdown = $('<div />', {
 		    'class': 'dropdown suggest ' + this.options.dropdownClass,
 			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
@@ -49,7 +49,6 @@
 				.on('suggest.show', $.proxy(this.options.onshow, this))
 				.on('suggest.select', $.proxy(this.options.onselect, this))
 				.on('suggest.lookup', $.proxy(this.options.onlookup, this))
-				.on('keypress', $.proxy(this.__keypress, this))
 				.on('keyup', $.proxy(this.__keyup, this));
 
 			return this;
@@ -461,7 +460,7 @@
 				};
 
 			if (!this.isShown) {
-				
+
 				this.$dropdown.addClass('open');
 				if (options.position !== false) {
 
@@ -488,10 +487,10 @@
 					} else {
 						position = $.extend(position, typeof options.position == 'function' ? options.position(el, caretPos) : options.position);
 					}
-					
+
 					$dropdownMenu.css(position);
 				}
-				
+
 				this.isShown = true;
 				$el.trigger($.extend({type: 'suggest.show'}, this));
 			}
