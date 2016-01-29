@@ -1,5 +1,5 @@
 /* ===================================================
- * bootstrap-suggest.js v1.0.0
+ * bootstrap-suggest.js v1.2.2
  * http://github.com/lodev09/bootstrap-suggest
  * ===================================================
  * Copyright 2014 Jovanni Lo
