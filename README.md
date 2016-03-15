@@ -26,6 +26,7 @@ var users = [
 
 ### Init
 ```javascript
+// using users data
 $('#comment').suggest('@', {
   data: users,
   map: function(user) {
@@ -34,7 +35,22 @@ $('#comment').suggest('@', {
       text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
     }
   }
-})
+});
+
+// using ajax: http://lodev09.github.io/bootstrap-suggest/#init-with-ajax-
+$('#comment').suggest('@', {
+  data: function(q) {
+    if (q && q.length > 3) {
+      return $.getJSON("users/lookup.json", { q:q });
+    }
+  },
+  map: function(user) {
+    return {
+      value: user.username,
+      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
+    }
+  }
+});
 ```
 
 ## API
