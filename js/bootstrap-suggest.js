@@ -416,6 +416,7 @@
 			this.$items.filter(function (index) {
 
 				// return the limit if q is empty
+				if (q === '') return index < options.filter.limit;
 
 				var $this = $(this),
 				value = $this.find('a:first').text();
