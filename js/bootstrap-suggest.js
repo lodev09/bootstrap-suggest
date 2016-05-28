@@ -414,6 +414,10 @@
 			var options = this.options;
 			this.$items.addClass('hidden');
 			this.$items.filter(function (index) {
+
+				// return the limit if q is empty
+				if (q === '') return index < options.filter.limit;
+
 				var $this = $(this),
 				value = $this.find('a:first').text();
 
@@ -462,12 +466,7 @@
 					this.$items = this.__buildItems(data);
 				}
 				var items;
-				if (q === "") {
-					this.$items.slice(0, options.filter.limit).removeClass('hidden active');
-					items = this.$items;
-				} else {
-					items = this.__filterData(q, data);
-				}
+				items = this.__filterData(q, data);
 				this.__lookup(q, items);
 			}
 		},
