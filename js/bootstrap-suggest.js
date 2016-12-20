@@ -572,7 +572,7 @@
 						suggestion[arg1] = arg2 instanceof Array ? {data: arg2} : arg2;
 						if (!data) {
 							$this.data('suggest', createSuggest(this, suggestion));
-						} else if (data && !arg1 in data) {
+						} else if (data && !(arg1 in data)) {
 							$this.data('suggest', $.extend(data, createSuggest(this, suggestion)));
 						}
 					}
