@@ -1,8 +1,8 @@
 /* ===================================================
-* bootstrap-suggest.js v1.3.0
+* bootstrap-suggest.js
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
-* Copyright 2014 Jovanni Lo
+* Copyright 2017 Jovanni Lo
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
