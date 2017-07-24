@@ -1,5 +1,5 @@
 /* ===================================================
-* bootstrap-suggest.js v1.2.2
+* bootstrap-suggest.js v1.3.0
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
 * Copyright 2014 Jovanni Lo
@@ -431,7 +431,8 @@
 		},
 
 		get: function(index) {
-			if(!this.$items) { return; }
+			if (!this.$items) return;
+
 			var $item = this.$items.eq(index);
 			return {
 				text: $item.children('a:first').text(),
@@ -443,28 +444,30 @@
 
 		lookup: function(q) {
 			var options = this.options,
-			that = this,
-			data;
-
-			if (typeof this.options.data == 'function') {
-				this.$items = undefined;
-				data = this.options.data(q);
-			} else {
-				data = this.options.data;
-			}
-
-			if(data && $.isFunction(data.promise)) {
-				data.done(function(data) {
-					if(data && data.length > options.filter.limit) {
+				that = this,
+				data,
+				lookup = function(data) {
+					if (data && data.length > options.filter.limit) {
 						data = data.slice(0, options.filter.limit);
 					}
 					that.$items = that.__buildItems(data);
 					that.__lookup(q, that.$items);
-				});
+				};
+
+			if (typeof this.options.data == 'function') {
+				this.$items = undefined;
+				data = this.options.data(q, lookup);
 			} else {
-				if(!this.$items) {
+				data = this.options.data;
+			}
+
+			if (data && $.isFunction(data.promise)) {
+				data.done(lookup);
+			} else if (data) {
+				if (!this.$items) {
 					this.$items = this.__buildItems(data);
 				}
+
 				var items;
 				items = this.__filterData(q, data);
 				this.__lookup(q, items);

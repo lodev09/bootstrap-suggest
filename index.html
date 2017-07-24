@@ -109,8 +109,31 @@ Ajax is supported by having the data function return a <a href="http://api.jquer
 ```javascript
 $('#comment').suggest('@', {
   data: function(q) {
-    if (q && q.length >= 3) {
-      return $.getJSON("users/lookup.json", { q:q });
+    if (q) {
+      return $.getJSON("users/lookup.json", { q: q });
+    }
+  },
+  map: function(user) {
+    return {
+      value: user.username,
+      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
+    }
+  }
+})
+```
+
+### Init (via lookup function)
+A `lookup` function is provided for you to call on after securing your data (don't return anything to the `data` option function to avoid conflict)
+```javascript
+$('#comment').suggest('@', {
+  data: function(q, lookup) {
+    if (q) {
+      $.getJSON("users/lookup.json", { q: q }, function(data) {
+        // simply call lookup and provide your data!
+        lookup(data);
+      });
+
+      // we aren't returning any
     }
   },
   map: function(user) {
