@@ -16,6 +16,7 @@
   "homepage": "https://github.com/lodev09/bootstrap-suggest",
   "ignore": [
     "**/.*",
+    "demo.jpg",
     "node_modules",
     "bower_components",
     "test",
