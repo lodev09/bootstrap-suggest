@@ -8,7 +8,8 @@ A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textb
 Several quick start options are available:
 
 - [download](https://github.com/lodev09/bootstrap-suggest/archive/v1.3.2.zip) latest release
-- [npm](https://www.npmjs.com/package/bootstrap-suggest): `install --save bootstrap-suggest`
+- [npm](https://www.npmjs.com/package/bootstrap-suggest): `npm install --save bootstrap-suggest`
+- [bower](https://bower.io): `bower install bootstrap-suggest`
 
 link stuff
 ```
@@ -77,8 +78,8 @@ All bugs, feature requests, pull requests, feedback, etc., are welcome!
 
 [Bootstrap Components](http://getbootstrap.com/components/)
 
-## License
+## Copyright & License
 Released under the [Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0).
 See [LICENSE](LICENSE) file.
 
-Copyright 2014, Jovanni Lo / [@lodev09](http://twitter.com/lodev09) / [www.lodev09.com](http://www.lodev09.com "www.lodev09.com") / [lodev09@gmail.com](mailto:lodev09@gmail.com)
+Copyright 2014-2017, Jovanni Lo / [@lodev09](http://twitter.com/lodev09) / [www.lodev09.com](http://www.lodev09.com "www.lodev09.com") / [lodev09@gmail.com](mailto:lodev09@gmail.com)
