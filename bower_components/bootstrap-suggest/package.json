@@ -1,0 +1,26 @@
+{
+  "name": "bootstrap-suggest",
+  "version": "1.3.2",
+  "description": "A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox",
+  "main": "bootstrap-suggest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lodev09/bootstrap-suggest.git"
+  },
+  "keywords": [
+    "bootstrap",
+    "tags",
+    "jquery-plugin",
+    "suggest",
+    "metions"
+  ],
+  "author": "Jovanni Lo (lodev09@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lodev09/bootstrap-suggest/issues"
+  },
+  "homepage": "https://github.com/lodev09/bootstrap-suggest#readme"
+}
