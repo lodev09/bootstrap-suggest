@@ -7,7 +7,7 @@ A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textb
 ## Install
 Several quick start options are available:
 
-- [download](https://github.com/lodev09/bootstrap-suggest/archive/v1.3.2.zip) latest release
+- [download](https://github.com/lodev09/bootstrap-suggest/archive/v1.3.5.zip) latest release
 - [npm](https://www.npmjs.com/package/bootstrap-suggest): `npm install --save bootstrap-suggest`
 - [bower](https://bower.io): `bower install bootstrap-suggest`
 
