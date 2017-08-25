@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-suggest",
   "description": "A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox",
-  "main": "bootstrap-suggest.js",
+  "main": ["bootstrap-suggest.css", "bootstrap-suggest.js"],
   "authors": [
     "Jovanni Lo (lodev09@gmail.com)"
   ],
