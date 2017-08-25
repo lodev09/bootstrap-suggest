@@ -11,13 +11,7 @@ Several quick start options are available:
 - [npm](https://www.npmjs.com/package/bootstrap-suggest): `npm install --save bootstrap-suggest`
 - [bower](https://bower.io): `bower install bootstrap-suggest`
 
-link stuff
-```
-<script src="js/bootstrap-suggest.js"></script>
-```
-```
-<link rel="stylesheet" type="text/css" href="css/bootstrap-suggest.css">
-```
+** Make sure to link `bootstrap-suggest.js` and `bootstrap-suggest.css` to your project
 
 ## Usage
 
