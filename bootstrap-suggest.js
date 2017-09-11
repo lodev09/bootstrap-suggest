@@ -572,7 +572,7 @@
 					if (arg2) {
 
 						// inline data determined if it's an array
-						suggestion[arg1] = arg2 instanceof Array ? {data: arg2} : arg2;
+						suggestion[arg1] = $.isArray(arg2) || typeof arg2 == 'function' ? {data: arg2} : arg2;
 						if (!data) {
 							$this.data('suggest', createSuggest(this, suggestion));
 						} else if (data && !(arg1 in data)) {
