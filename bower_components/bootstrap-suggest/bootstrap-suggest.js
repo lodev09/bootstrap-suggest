@@ -2,7 +2,7 @@
 * bootstrap-suggest.js
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
-* Copyright 2017 Jovanni Lo
+* Copyright 2017 Jovanni Lo @lodev09
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -328,8 +328,7 @@
 			this.hide();
 		},
 
-		__getSelection: function (el)
-		{
+		__getSelection: function (el) {
 			var start = 0,
 			end = 0,
 			rawValue,
@@ -445,32 +444,30 @@
 		lookup: function(q) {
 			var options = this.options,
 				that = this,
-				data,
-				lookup = function(data) {
-					if (data && data.length > options.filter.limit) {
-						data = data.slice(0, options.filter.limit);
-					}
-					that.$items = that.__buildItems(data);
-					that.__lookup(q, that.$items);
-				};
+				data;
 
-			if (typeof this.options.data == 'function') {
+			var provide = function(data) {
+				// verify that we're still "typing" the query (no space)
+				if (that._keyPos !== -1) {
+					if (!that.$items) {
+						that.$items = that.__buildItems(data);
+					}
+
+					that.__lookup(q, that.__filterData(q, data));
+				}
+			};
+
+			if (typeof this.options.data === 'function') {
 				this.$items = undefined;
-				data = this.options.data(q, lookup);
+				data = this.options.data(q, provide);
 			} else {
 				data = this.options.data;
 			}
 
-			if (data && $.isFunction(data.promise)) {
-				data.done(lookup);
+			if (data && typeof data.promise === 'function') {
+				data.done(provide);
 			} else if (data) {
-				if (!this.$items) {
-					this.$items = this.__buildItems(data);
-				}
-
-				var items;
-				items = this.__filterData(q, data);
-				this.__lookup(q, items);
+				provide.call(this, data);
 			}
 		},
 
@@ -527,7 +524,7 @@
 						}
 
 					} else {
-						position = $.extend(position, typeof options.position == 'function' ? options.position(el, caretPos) : options.position);
+						position = $.extend(position, typeof options.position === 'function' ? options.position(el, caretPos) : options.position);
 					}
 
 					$dropdownMenu.css(position);
@@ -546,12 +543,16 @@
 	// .suggest( suggestions )
 	$.fn.suggest = function(arg1) {
 		var arg2 = arguments[1];
+		var arg3 = arguments[2];
 
-		var createSuggest = function(el, suggestions) {
+		var createSuggestions = function(el, suggestions) {
 			var newData = {};
 			$.each(suggestions, function(keyChar, options) {
 				var key =  keyChar.toString().charAt(0);
-				newData[key] = new Suggest(el, key, typeof options == 'object' && options);
+
+				// remove existing suggest
+				// $('.suggest.dropdown[data-key="'+key+'"]').remove();
+				newData[key] = new Suggest(el, key, typeof options === 'object' && options);
 			});
 
 			return newData;
@@ -561,36 +562,51 @@
 			var that = this,
 			$this = $(this),
 			data = $this.data('suggest'),
-			suggestion = {};
+			suggestions = {};
 
-			if (typeof arg1 == 'string') {
-				if (arg1.length > 1 && data) {
-					// arg1 as a method
-					if (typeof data[arg1] != 'undefined') data[arg1](arg2);
-				} else if (arg1.length == 1) {
+			if (typeof arg1 === 'string') {
+				if (arg1.length == 1) {
 					// arg1 as key
 					if (arg2) {
+						// arg2 is a function name
+						if (typeof arg2 === 'string') {
+							if (arg1 in data && typeof data[arg1][arg2] !== 'undefined') {
+								return data[arg1][arg2].call(data[arg1], arg3);
+							} else {
+								console.error(arg1 + ' is not a suggest');
+							}
+						} else {
+							// inline data determined if it's an array
+							suggestions[arg1] = $.isArray(arg2) || typeof arg2 === 'function' ? {data: arg2} : arg2;
 
-						// inline data determined if it's an array
-						suggestion[arg1] = arg2 instanceof Array ? {data: arg2} : arg2;
-						if (!data) {
-							$this.data('suggest', createSuggest(this, suggestion));
-						} else if (data && !(arg1 in data)) {
-							$this.data('suggest', $.extend(data, createSuggest(this, suggestion)));
+							// if key is existing, update options
+							if (data && arg1 in data) {
+								data[arg1].options = $.extend({}, data[arg1].options, suggestions[arg1]);
+							} else {
+								data = $.extend(data, createSuggestions(this, suggestions));
+							}
+
+							$this.data('suggest', data);
 						}
 					}
+				} else {
+					console.error('you\'re not initializing suggest properly. arg1 should have length == 1');
 				}
 			} else {
 				// arg1 contains set of suggestions
-				if (!data) $this.data('suggest', createSuggest(this, arg1));
+				if (!data) $this.data('suggest', createSuggestions(this, arg1));
 				else if (data) {
+					// create/update suggestions
 					$.each(arg1, function(key, value) {
-						if (key in data == false) {
-							suggestion[key] = value;
+						if (key in data === false) {
+							suggestions[key] = value;
+						} else {
+							// extend (update) options
+							data[key].options = $.extend({}, data[key].options, value);
 						}
 					});
 
-					$this.data('suggest', $.extend(data, createSuggest(that, suggestion)))
+					$this.data('suggest', $.extend(data, createSuggestions(that, suggestions)))
 				}
 			}
 		});

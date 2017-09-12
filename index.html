@@ -103,46 +103,60 @@ $('#comment').suggest('@', {
 })
 ```
 
-### Init (with Ajax)
+#### via Promise or ajax
 Ajax is supported by having the data function return a <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> object. The function takes a single parameter containing the mention text string.
 
 ```javascript
 $('#comment').suggest('@', {
   data: function(q) {
     if (q) {
-      return $.getJSON("users/lookup.json", { q: q });
+      return $.getJSON("users/data.json", { q: q });
     }
   },
-  map: function(user) {
-    return {
-      value: user.username,
-      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
-    }
-  }
+  // ...
 })
 ```
 
-### Init (via lookup function)
-A `lookup` function is provided for you to call on after securing your data (don't return anything to the `data` option function to avoid conflict)
+#### via "provide" function
+A `provide` function is provided for you to call on after securing your data (don't return anything to the `data` option function to avoid conflict)
 ```javascript
 $('#comment').suggest('@', {
-  data: function(q, lookup) {
+  data: function(q, provide) {
     if (q) {
-      $.getJSON("users/lookup.json", { q: q }, function(data) {
-        // simply call lookup and provide your data!
-        lookup(data);
+      $.getJSON("users/data.json", { q: q }, function(data) {
+        // simply call provide and pass on your data!
+        provide.call(data);
       });
 
       // we aren't returning any
     }
   },
-  map: function(user) {
-    return {
-      value: user.username,
-      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
-    }
-  }
+  // ...
 })
+```
+
+### Advanced
+#### Add delay search while typing
+```javascript
+timeout = null;
+$('#comment').suggest('@', {
+  data: function(q, lookup) {
+    var processData = function() {
+      $.getJSON("users/lookup.json", { q: q }, function(data) {
+        lookup.call(data);
+      });
+    };
+
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+
+    timeout = setTimeout(processData, 500);
+  },
+  // ...
+})
+
 ```
 
       </div>
@@ -175,10 +189,15 @@ $('#comment').suggest('@', {
 | lookup | object item | triggered when searching for an item |
 
 ### Methods
+```
+$('#comments').suggest('@', 'lookup', '...');
+```
 | method | params    | description                                        |
 | ---    | ---       | ---                                                |
 | get    | int index | returns an `object` item                           |
 | lookup | string q  | search for an item given by the `q` (query) string |
+| show   |           | show dropdown                                      |
+| hide   |           | hide dropdown                                      |
 
 
 ### Properties
@@ -207,7 +226,6 @@ $('#comment').suggest('@', {
 
 	<!-- plugin script -->
 	<script src="bower_components/bootstrap-suggest/bootstrap-suggest.js"></script>
-    
     <script>
       hljs.initHighlightingOnLoad();
     	// configure marked
@@ -268,6 +286,7 @@ $('#comment').suggest('@', {
             }
           })
 
+          $('#comment').suggest('@', [{username: 'lodev09s', fullname: 'Jovanni Los'}]);
       	})
     </script>
   </body>
