@@ -7,7 +7,7 @@ A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textb
 ## Install
 Several quick start options are available:
 
-- [download](https://github.com/lodev09/bootstrap-suggest/archive/v1.3.6.zip) latest release
+- [download](https://github.com/lodev09/bootstrap-suggest/archive/v1.3.7.zip) latest release
 - [npm](https://www.npmjs.com/package/bootstrap-suggest): `npm install --save bootstrap-suggest`
 - [bower](https://bower.io): `bower install bootstrap-suggest`
 
@@ -24,7 +24,7 @@ Several quick start options are available:
 ```
 
 ### Data
-```javascript
+```
 var users = [
   {username: 'lodev09', fullname: 'Jovanni Lo'},
   {username: 'foo', fullname: 'Foo User'},
@@ -37,7 +37,6 @@ var users = [
 
 ### Init
 ```javascript
-// using users data
 $('#comment').suggest('@', {
   data: users,
   map: function(user) {
@@ -46,22 +45,63 @@ $('#comment').suggest('@', {
       text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
     }
   }
-});
+})
+```
 
-// using ajax: http://lodev09.github.io/bootstrap-suggest/#init-with-ajax-
+#### via Promise or ajax
+Ajax is supported by having the data function return a <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> object. The function takes a single parameter containing the mention text string.
+
+```javascript
 $('#comment').suggest('@', {
   data: function(q) {
-    if (q && q.length > 3) {
-      return $.getJSON("users/lookup.json", { q:q });
+    if (q) {
+      return $.getJSON("users/data.json", { q: q });
     }
   },
-  map: function(user) {
-    return {
-      value: user.username,
-      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
+  // ...
+})
+```
+
+#### via "provide" function
+A `provide` function is provided for you to call on after securing your data (don't return anything to the `data` option function to avoid conflict)
+```javascript
+$('#comment').suggest('@', {
+  data: function(q, provide) {
+    if (q) {
+      $.getJSON("users/data.json", { q: q }, function(data) {
+        // simply call provide and pass on your data!
+        provide.call(data);
+      });
+
+      // we aren't returning any
     }
-  }
-});
+  },
+  // ...
+})
+```
+
+### Advanced
+#### Add delay search while typing
+```javascript
+timeout = null;
+$('#comment').suggest('@', {
+  data: function(q, lookup) {
+    var processData = function() {
+      $.getJSON("users/lookup.json", { q: q }, function(data) {
+        lookup.call(data);
+      });
+    };
+
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+
+    timeout = setTimeout(processData, 500);
+  },
+  // ...
+})
+
 ```
 
 ## API
