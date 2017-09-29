@@ -418,13 +418,15 @@
 				if (q === '') return index < options.filter.limit;
 
 				var $this = $(this),
-				value = $this.find('a:first').text();
+				var value = $this.find('a:first').text();
 
 				if (!options.filter.casesensitive) {
 					value = value.toLowerCase();
 					q = q.toLowerCase();
 				}
+
 				return value.indexOf(q) != -1;
+
 			}).slice(0, options.filter.limit).removeClass('hidden active');
 			return this.__getVisibleItems();
 		},
