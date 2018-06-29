@@ -417,7 +417,7 @@
 				// return the limit if q is empty
 				if (q === '') return index < options.filter.limit;
 
-				var $this = $(this),
+				var $this = $(this);
 				var value = $this.find('a:first').text();
 
 				if (!options.filter.casesensitive) {
