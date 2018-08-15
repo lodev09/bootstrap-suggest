@@ -209,9 +209,9 @@
 			}
 
 			$dropdown
-				.on('click', 'div:has(a)', function(e) {
+				.on('click', 'div.dropdown-item:not(.d-none):has(a)', function(e) {
 					e.preventDefault();
-					that.__select($(this).index());
+					that.__select($(this).closest(".dropdown-item").index());
 					that.$element.focus();
 				})
 				.on('mouseover', 'div:has(a)', function(e) {
