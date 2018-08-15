@@ -35,7 +35,7 @@
 
 		this.$dropdown = $('<div />', {
 			'class': 'dropdown suggest ' + this.options.dropdownClass,
-			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
+			'html': $('<div />', {'class': 'dropdown-menu', role: 'menu'}),
 			'data-key': this.key
 		});
 
@@ -46,10 +46,10 @@
 	Suggest.prototype = {
 		__setListener: function() {
 			this.$element
-			.on('suggest.show', $.proxy(this.options.onshow, this))
-			.on('suggest.select', $.proxy(this.options.onselect, this))
-			.on('suggest.lookup', $.proxy(this.options.onlookup, this))
-			.on('keyup', $.proxy(this.__keyup, this));
+				.on('suggest.show', $.proxy(this.options.onshow, this))
+				.on('suggest.select', $.proxy(this.options.onselect, this))
+				.on('suggest.lookup', $.proxy(this.options.onlookup, this))
+				.on('keyup', $.proxy(this.__keyup, this));
 
 			return this;
 		},
@@ -112,7 +112,7 @@
 				// default textarea styles
 				style.whiteSpace = 'pre-wrap';
 				if (element.nodeName !== 'INPUT')
-				style.wordWrap = 'break-word';  // only for textarea-s
+					style.wordWrap = 'break-word';  // only for textarea-s
 
 				// position off-screen
 				style.position = 'absolute';  // required to return coordinates properly
@@ -128,7 +128,7 @@
 					style.width = parseInt(computed.width) - 2 + 'px';  // Firefox adds 2 pixels to the padding - https://bugzilla.mozilla.org/show_bug.cgi?id=753662
 					// Firefox lies about the overflow property for textareas: https://bugzilla.mozilla.org/show_bug.cgi?id=984275
 					if (element.scrollHeight > parseInt(computed.height))
-					style.overflowY = 'scroll';
+						style.overflowY = 'scroll';
 				} else {
 					style.overflow = 'hidden';  // for Chrome to not render a scrollbar; IE keeps overflowY = 'scroll'
 				}
@@ -136,7 +136,7 @@
 				div.textContent = element.value.substring(0, position);
 				// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
 				if (element.nodeName === 'INPUT')
-				div.textContent = div.textContent.replace(/\s/g, "\u00a0");
+					div.textContent = div.textContent.replace(/\s/g, "\u00a0");
 
 				var span = document.createElement('span');
 				// Wrapping must be replicated *exactly*, including when a long word gets
@@ -164,7 +164,7 @@
 			// don't query special characters
 			// http://mikemurko.com/general/jquery-keycode-cheatsheet/
 			var specialChars = [38, 40, 37, 39, 17, 18, 9, 16, 20, 91, 93, 36, 35, 45, 33, 34, 144, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 145, 19],
-			$resultItems;
+				$resultItems;
 
 			switch (e.keyCode) {
 				case 27:
@@ -177,8 +177,8 @@
 			if ($.inArray(e.keyCode, specialChars) !== -1) return true;
 
 			var $el = this.$element,
-			val = $el.val(),
-			currentPos = this.__getSelection($el.get(0)).start;
+				val = $el.val(),
+				currentPos = this.__getSelection($el.get(0)).start;
 			for (var i = currentPos; i >= 0; i--) {
 				var subChar = $.trim(val.substring(i-1, i));
 				if (!subChar) {
@@ -196,94 +196,94 @@
 		},
 
 		__getVisibleItems: function() {
-			return this.$items ? this.$items.not('.hidden') : $();
+			return this.$items ? this.$items.not('.d-none') : $();
 		},
 
 		__build: function() {
 			var elems = [], $item,
-			$dropdown = this.$dropdown,
-			that = this;
+				$dropdown = this.$dropdown,
+				that = this;
 
 			var blur = function(e) {
 				that.hide();
 			}
 
 			$dropdown
-			.on('click', 'li:has(a)', function(e) {
-				e.preventDefault();
-				that.__select($(this).index());
-				that.$element.focus();
-			})
-			.on('mouseover', 'li:has(a)', function(e) {
-				that.$element.off('blur', blur);
-			})
-			.on('mouseout', 'li:has(a)', function(e) {
-				that.$element.on('blur', blur);
-			});
+				.on('click', 'div:has(a)', function(e) {
+					e.preventDefault();
+					that.__select($(this).index());
+					that.$element.focus();
+				})
+				.on('mouseover', 'div:has(a)', function(e) {
+					that.$element.off('blur', blur);
+				})
+				.on('mouseout', 'div:has(a)', function(e) {
+					that.$element.on('blur', blur);
+				});
 
 			this.$element.before($dropdown)
-			.on('blur', blur)
-			.on('keydown', function(e) {
-				var $visibleItems;
-				if (that.isShown) {
-					switch (e.keyCode) {
-						case 13: // enter key
-							$visibleItems = that.__getVisibleItems();
-							$visibleItems.each(function(index) {
-								if ($(this).is('.active'))
-								that.__select($(this).index());
-							});
+				.on('blur', blur)
+				.on('keydown', function(e) {
+					var $visibleItems;
+					if (that.isShown) {
+						switch (e.keyCode) {
+							case 13: // enter key
+								$visibleItems = that.__getVisibleItems();
+								$visibleItems.each(function(index) {
+									if ($(this).is('.active'))
+										that.__select($(this).index());
+								});
 
-							return false;
-							break;
-						case 40: // arrow down
-							$visibleItems = that.__getVisibleItems();
-							if ($visibleItems.last().is('.active')) return false;
-							$visibleItems.each(function(index) {
-								var $this = $(this),
-								$next = $visibleItems.eq(index + 1);
+								return false;
+								break;
+							case 40: // arrow down
+								$visibleItems = that.__getVisibleItems();
+								if ($visibleItems.last().is('.active')) return false;
+								$visibleItems.each(function(index) {
+									var $this = $(this),
+										$next = $visibleItems.eq(index + 1);
 
-								//if (!$next.length) return false;
+									//if (!$next.length) return false;
 
-								if ($this.is('.active')) {
-									if (!$next.is('.hidden')) {
-										$this.removeClass('active');
-										$next.addClass('active');
+									if ($this.is('.active')) {
+										if (!$next.is('.d-none')) {
+											$this.removeClass('active');
+											$next.addClass('active');
+										}
+										return false;
 									}
-									return false;
-								}
-							});
-							return false;
-						case 38: // arrow up
-							$visibleItems = that.__getVisibleItems();
-							if ($visibleItems.first().is('.active')) return false;
-							$visibleItems.each(function(index) {
-								var $this = $(this),
-								$prev = $visibleItems.eq(index - 1);
+								});
+								return false;
+							case 38: // arrow up
+								$visibleItems = that.__getVisibleItems();
+								if ($visibleItems.first().is('.active')) return false;
+								$visibleItems.each(function(index) {
+									var $this = $(this),
+										$prev = $visibleItems.eq(index - 1);
 
-								//if (!$prev.length) return false;
+									//if (!$prev.length) return false;
 
-								if ($this.is('.active')) {
-									if (!$prev.is('.hidden')) {
-										$this.removeClass('active');
-										$prev.addClass('active');
+									if ($this.is('.active')) {
+										if (!$prev.is('.d-none')) {
+											$this.removeClass('active');
+											$prev.addClass('active');
+										}
+										return false;
 									}
-									return false;
-								}
-							})
-							return false;
+								})
+								return false;
+						}
 					}
-				}
-			});
+				});
 
 		},
 
 		__mapItem: function(dataItem) {
 			var itemHtml, that = this,
-			_item = {
-				text: '',
-				value: ''
-			};
+				_item = {
+					text: '',
+					value: ''
+				};
 
 			if (this.options.map) {
 				dataItem = this.options.map(dataItem);
@@ -298,7 +298,7 @@
 				_item.value = dataItem;
 			}
 
-			return $('<li />', {'data-value': _item.value}).html($('<a />', {
+			return $('<div />', {'class':'dropdown-item','data-value': _item.value}).html($('<a />', {
 				href: '#',
 				html: _item.text
 			}));
@@ -306,10 +306,10 @@
 
 		__select: function(index) {
 			var $el = this.$element,
-			el = $el.get(0),
-			val = $el.val(),
-			item = this.get(index),
-			setCaretPos = this._keyPos + item.value.length + 1;
+				el = $el.get(0),
+				val = $el.val(),
+				item = this.get(index),
+				setCaretPos = this._keyPos + item.value.length + 1;
 
 			$el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.__getSelection(el).start));
 
@@ -330,13 +330,13 @@
 
 		__getSelection: function (el) {
 			var start = 0,
-			end = 0,
-			rawValue,
-			normalizedValue,
-			range,
-			textInputRange,
-			len,
-			endRange;
+				end = 0,
+				rawValue,
+				normalizedValue,
+				range,
+				textInputRange,
+				len,
+				endRange;
 			el.focus();//in IE9 selectionStart will always be 9 if not focused(when selecting using the mouse)
 			if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
 				start = el.selectionStart;
@@ -396,7 +396,7 @@
 					}
 				}
 			}
-			return $dropdownMenu.find('li:has(a)');
+			return $dropdownMenu.find('div:has(a)');
 		},
 
 		__lookup: function(q, $resultItems) {
@@ -411,7 +411,7 @@
 
 		__filterData: function(q, data) {
 			var options = this.options;
-			this.$items.addClass('hidden');
+			this.$items.addClass('d-none');
 			this.$items.filter(function (index) {
 
 				// return the limit if q is empty
@@ -427,7 +427,7 @@
 
 				return value.indexOf(q) != -1;
 
-			}).slice(0, options.filter.limit).removeClass('hidden active');
+			}).slice(0, options.filter.limit).removeClass('d-none active');
 			return this.__getVisibleItems();
 		},
 
@@ -479,7 +479,8 @@
 		},
 
 		hide: function() {
-			this.$dropdown.removeClass('open');
+			this.$dropdown.removeClass('show');
+			this.$dropdown.find(".dropdown-menu").removeClass('show');
 			this.isShown = false;
 			if(this.$items) {
 				this.$items.removeClass('active');
@@ -489,20 +490,21 @@
 
 		show: function() {
 			var $el = this.$element,
-			$dropdownMenu = this.$dropdown.find('.dropdown-menu'),
-			el = $el.get(0),
-			options = this.options,
-			caretPos,
-			position = {
-				top: 'auto',
-				bottom: 'auto',
-				left: 'auto',
-				right: 'auto'
-			};
+				$dropdownMenu = this.$dropdown.find('.dropdown-menu'),
+				el = $el.get(0),
+				options = this.options,
+				caretPos,
+				position = {
+					top: 'auto',
+					bottom: 'auto',
+					left: 'auto',
+					right: 'auto'
+				};
 
 			if (!this.isShown) {
 
-				this.$dropdown.addClass('open');
+				this.$dropdown.addClass('show');
+				$dropdownMenu.addClass('show');
 				if (options.position !== false) {
 
 					caretPos = this.__getCaretPos(this._keyPos);
@@ -562,9 +564,9 @@
 
 		return this.each(function() {
 			var that = this,
-			$this = $(this),
-			data = $this.data('suggest'),
-			suggestions = {};
+				$this = $(this),
+				data = $this.data('suggest'),
+				suggestions = {};
 
 			if (typeof arg1 === 'string') {
 				if (arg1.length == 1) {
