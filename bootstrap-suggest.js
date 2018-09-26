@@ -210,8 +210,8 @@
 
 			$dropdown
 			.on('click', 'li:has(a)', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
+                		e.stopPropagation();
+                		e.preventDefault();
 				that.__select($(this).index());
 				that.$element.focus();
 			})
