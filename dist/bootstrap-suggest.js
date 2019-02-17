@@ -2,13 +2,13 @@
 * bootstrap-suggest.js
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
-* Copyright 2017 Jovanni Lo @lodev09
+* Copyright 2019 Jovanni Lo @lodev09
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-* http://www.apache.org/licenses/LICENSE-2.0
+* http://opensource.org/licenses/MIT
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@
 
         this.$dropdown = $('<div />', {
             'class': 'dropdown suggest ' + this.options.dropdownClass,
-            'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
+            'html': $('<div />', {'class': 'dropdown-menu', role: 'menu'}),
             'data-key': this.key
         });
 
@@ -119,8 +119,7 @@
                 style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
                 // transfer the element's properties to the div
-                $.each(properties, function (index, value)
-                {
+                $.each(properties, function (index, value) {
                     style[value] = computed[value];
                 });
 
@@ -163,28 +162,29 @@
         __keyup: function(e) {
             // don't query special characters
             // http://mikemurko.com/general/jquery-keycode-cheatsheet/
-            var specialChars = [38, 40, 37, 39, 17, 18, 9, 16, 20, 91, 93, 36, 35, 45, 33, 34, 144, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 145, 19],
-            $resultItems;
+            var specialChars = [38, 40, 37, 39, 17, 18, 9, 16, 20, 91, 93, 36, 35, 45, 33, 34, 144, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 145, 19];
 
             switch (e.keyCode) {
-                case 27:
+                case 27: // escape
                     this.hide();
                     return;
-                case 13:
+                case 13: // enter/return
                     return true;
             }
 
-            if ($.inArray(e.keyCode, specialChars) !== -1) return true;
+            if ($.inArray(e.keyCode, specialChars) !== -1) return;
 
             var $el = this.$element,
-            val = $el.val(),
-            currentPos = this.__getSelection($el.get(0)).start;
+                val = $el.val(),
+                currentPos = this.__getSelection($el.get(0)).start;
+
             for (var i = currentPos; i >= 0; i--) {
                 var subChar = $.trim(val.substring(i-1, i));
                 if (!subChar) {
                     this.hide();
                     break;
                 }
+
                 if (subChar === this.key && $.trim(val.substring(i-2, i-1)) == '') {
                     this.query = val.substring(i, currentPos);
                     this._queryPos = [i, currentPos];
@@ -196,35 +196,29 @@
         },
 
         __getVisibleItems: function() {
-            return this.$items ? this.$items.not('.hidden') : $();
+            return this.$items ? this.$items.not('.d-none') : $();
         },
 
         __build: function() {
             var elems = [], $item,
-            $dropdown = this.$dropdown,
-            that = this;
+                $dropdown = this.$dropdown,
+                that = this;
 
             var blur = function(e) {
                 that.hide();
             }
 
-            $dropdown
-            .on('click', 'li:has(a)', function(e) {
-                e.stopPropagation();
+            $dropdown.on('click', 'a.dropdown-item', function(e) {
                 e.preventDefault();
                 that.__select($(this).index());
                 that.$element.focus();
-            })
-            .on('mouseover', 'li:has(a)', function(e) {
+            }).on('mouseover', 'a.dropdown-item', function(e) {
                 that.$element.off('blur', blur);
-            })
-            .on('mouseout', 'li:has(a)', function(e) {
+            }).on('mouseout', 'a.dropdown-item', function(e) {
                 that.$element.on('blur', blur);
             });
 
-            this.$element.before($dropdown)
-            .on('blur', blur)
-            .on('keydown', function(e) {
+            this.$element.before($dropdown).on('blur', blur).on('keydown', function(e) {
                 var $visibleItems;
                 if (that.isShown) {
                     switch (e.keyCode) {
@@ -247,7 +241,7 @@
                                 //if (!$next.length) return false;
 
                                 if ($this.is('.active')) {
-                                    if (!$next.is('.hidden')) {
+                                    if (!$next.is('.d-none')) {
                                         $this.removeClass('active');
                                         $next.addClass('active');
                                     }
@@ -265,7 +259,7 @@
                                 //if (!$prev.length) return false;
 
                                 if ($this.is('.active')) {
-                                    if (!$prev.is('.hidden')) {
+                                    if (!$prev.is('.d-none')) {
                                         $this.removeClass('active');
                                         $prev.addClass('active');
                                     }
@@ -281,10 +275,10 @@
 
         __mapItem: function(dataItem) {
             var itemHtml, that = this,
-            _item = {
-                text: '',
-                value: ''
-            };
+                _item = {
+                    text: '',
+                    value: ''
+                };
 
             if (this.options.map) {
                 dataItem = this.options.map(dataItem);
@@ -299,18 +293,20 @@
                 _item.value = dataItem;
             }
 
-            return $('<li />', {'data-value': _item.value}).html($('<a />', {
+            return $('<a />', {
+                'class': 'dropdown-item',
+                'data-value': _item.value,
                 href: '#',
                 html: _item.text
-            }));
+            });
         },
 
         __select: function(index) {
             var $el = this.$element,
-            el = $el.get(0),
-            val = $el.val(),
-            item = this.get(index),
-            setCaretPos = this._keyPos + item.value.length + 1;
+                el = $el.get(0),
+                val = $el.val(),
+                item = this.get(index),
+                setCaretPos = this._keyPos + item.value.length + 1;
 
             $el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.__getSelection(el).start));
 
@@ -330,64 +326,18 @@
         },
 
         __getSelection: function (el) {
-            var start = 0,
-            end = 0,
-            rawValue,
-            normalizedValue,
-            range,
-            textInputRange,
-            len,
-            endRange;
-            el.focus();//in IE9 selectionStart will always be 9 if not focused(when selecting using the mouse)
-            if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
-                start = el.selectionStart;
-                end = el.selectionEnd;
-            } else {
-                range = document.selection.createRange();
+            //in IE9 selectionStart will always be 9 if not focused(when selecting using the mouse)
+            el.focus();
 
-                if (range && range.parentElement() === el) {
-                    rawValue = el.value;
-                    len = rawValue.length;
-                    normalizedValue = rawValue.replace(/\r\n/g, "\n");
-
-                    // Create a working TextRange that lives only in the input
-                    textInputRange = el.createTextRange();
-                    textInputRange.moveToBookmark(range.getBookmark());
-
-                    // Check if the start and end of the selection are at the very end
-                    // of the input, since moveStart/moveEnd doesn't return what we want
-                    // in those cases
-                    endRange = el.createTextRange();
-                    endRange.collapse(false);
-
-                    if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
-                        start = end = len;
-                    } else {
-                        start = -textInputRange.moveStart("character", -len);
-                        start += normalizedValue.slice(0, start).split("\n").length - 1;
-
-                        if (textInputRange.compareEndPoints("EndToEnd", endRange) > -1) {
-                            end = len;
-                        } else {
-                            end = -textInputRange.moveEnd("character", -len);
-                            end += normalizedValue.slice(0, end).split("\n").length - 1;
-                        }
-                    }
-
-                    /// normalize newlines
-                    start -= (rawValue.substring(0, start).split('\r\n').length - 1);
-                    end -= (rawValue.substring(0, end).split('\r\n').length - 1);
-                    /// normalize newlines
-                }
-            }
             return {
-                start: start,
-                end: end
+                start: el.selectionStart,
+                end: el.selectionEnd
             };
         },
 
         __buildItems: function(data) {
             var $dropdownMenu = this.$dropdown.find('.dropdown-menu');
+
             $dropdownMenu.empty();
             if (data && data instanceof Array) {
                 for (var i in data) {
@@ -397,12 +347,14 @@
                     }
                 }
             }
-            return $dropdownMenu.find('li:has(a)');
+
+            return $dropdownMenu.find('a.dropdown-item');
         },
 
         __lookup: function(q, $resultItems) {
-            this.$element.trigger($.extend({type: 'suggest.lookup'}, this), [q, $resultItems]);
             var active = $resultItems.eq(0).addClass('active');
+            this.$element.trigger($.extend({type: 'suggest.lookup'}, this), [q, $resultItems]);
+
             if ($resultItems && $resultItems.length) {
                 this.show();
             } else {
@@ -412,23 +364,21 @@
 
         __filterData: function(q, data) {
             var options = this.options;
-            this.$items.addClass('hidden');
+
+            this.$items.addClass('d-none');
             this.$items.filter(function (index) {
 
                 // return the limit if q is empty
                 if (q === '') return index < options.filter.limit;
 
-                var $this = $(this);
-                var value = $this.find('a:first').text();
+                var value = $(this).text();
 
                 if (!options.filter.casesensitive) {
                     value = value.toLowerCase();
                     q = q.toLowerCase();
                 }
-
                 return value.indexOf(q) != -1;
-
-            }).slice(0, options.filter.limit).removeClass('hidden active');
+            }).slice(0, options.filter.limit).removeClass('d-none active');
             return this.__getVisibleItems();
         },
 
@@ -437,7 +387,7 @@
 
             var $item = this.$items.eq(index);
             return {
-                text: $item.children('a:first').text(),
+                text: $item.text(),
                 value: $item.attr('data-value'),
                 index: index,
                 $element: $item
@@ -480,7 +430,7 @@
         },
 
         hide: function() {
-            this.$dropdown.removeClass('open');
+            this.$dropdown.find('.dropdown-menu').removeClass('show');
             this.isShown = false;
             if(this.$items) {
                 this.$items.removeClass('active');
@@ -490,20 +440,20 @@
 
         show: function() {
             var $el = this.$element,
-            $dropdownMenu = this.$dropdown.find('.dropdown-menu'),
-            el = $el.get(0),
-            options = this.options,
-            caretPos,
-            position = {
-                top: 'auto',
-                bottom: 'auto',
-                left: 'auto',
-                right: 'auto'
-            };
+                $dropdownMenu = this.$dropdown.find('.dropdown-menu'),
+                el = $el.get(0),
+                options = this.options,
+                caretPos,
+                position = {
+                    top: 'auto',
+                    bottom: 'auto',
+                    left: 'auto',
+                    right: 'auto'
+                };
 
             if (!this.isShown) {
 
-                this.$dropdown.addClass('open');
+                $dropdownMenu.addClass('show');
                 if (options.position !== false) {
 
                     caretPos = this.__getCaretPos(this._keyPos);
@@ -545,8 +495,8 @@
     // .suggest( method [, options] )
     // .suggest( suggestions )
     $.fn.suggest = function(arg1) {
-        var arg2 = arguments[1];
-        var arg3 = arguments[2];
+        var arg2 = arguments[1],
+            arg3 = arguments[2];
 
         var createSuggestions = function(el, suggestions) {
             var newData = {};
