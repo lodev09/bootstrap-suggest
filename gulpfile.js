@@ -27,6 +27,13 @@ gulp.task('vendor', function(cb) {
     ])
     .pipe(gulp.dest('./vendor/highlight.js'))
 
+  // bootstrap-suggest
+  gulp.src([
+      './node_modules/bootstrap-suggest/dist/bootstrap-suggest.js',
+      './node_modules/bootstrap-suggest/dist/bootstrap-suggest.css',
+    ])
+    .pipe(gulp.dest('./vendor/bootstrap-suggest'))
+
   cb();
 
 });
