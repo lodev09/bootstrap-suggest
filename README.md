@@ -1,19 +1,19 @@
-bootstrap-suggest
+bootstrap-suggest-demo
 ============================
-A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox.
+A bootstrap plugin for your mention needs.
 
-![demo](demo.jpg "demo")
+![demo](demo.png "demo")
 
 ## API
 http://lodev09.github.io/bootstrap-suggest/#api
 
-## Credits
-All bugs, feature requests, pull requests, feedback, etc., are welcome!
+## Feedback
+All bugs, feature requests, pull requests, feedback, etc., are welcome. Visit my site at [www.lodev09.com](http://www.lodev09.com "www.lodev09.com") or
+[![LICENSE MIT](https://img.shields.io/badge/Mail%20me%20at-lodev09%40gmail.com-green.svg)](mailto:lodev09@gmail.com)
 
-[Bootstrap Components](http://getbootstrap.com/components/)
+## Credits
+&copy; 2018 - Coded by Jovanni Lo / [@lodev09](http://twitter.com/lodev09)
 
 ## License
-Released under the [Apache License, Version 2.0](http://opensource.org/licenses/Apache-2.0).
+Released under the [![LICENSE MIT](https://img.shields.io/badge/license-MIT-red.svg)](http://opensource.org/licenses/MIT)
 See [LICENSE](LICENSE) file.
-
-Copyright 2014, Jovanni Lo / [@lodev09](http://twitter.com/lodev09) / [www.lodev09.com](http://www.lodev09.com "www.lodev09.com") / [lodev09@gmail.com](mailto:lodev09@gmail.com)

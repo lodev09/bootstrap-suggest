@@ -1,291 +1,353 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
+
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox">
+    <meta name="author" content="Jovanni Lo">
 
-    <title>bootstrap-suggest by lodev09</title>
+    <title>Bootstrap suggest - A bootstrap plugin for your mentions</title>
 
-    <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-	<!-- Custom styles for this template -->
-    <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+    <!-- hljs -->
+    <link href="vendor/highlight.js/github.css" rel="stylesheet">
 
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- Bootstrap suggest CSS -->
+    <link href="vendor/bootstrap-suggest/bootstrap-suggest.css" rel="stylesheet">
 
-	<!-- highlight css -->
-	<link rel="stylesheet" href="css/highlight-github.css">
+    <link href="assets/main.css" rel="stylesheet">
 
-	<!-- plugin css -->
-	<link rel="stylesheet" href="bower_components/bootstrap-suggest/bootstrap-suggest.css">
+</head>
 
-	<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="js/ie-emulation-modes-warning.js"></script>
+<body>
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
+            <a href="https://github.com/lodev09/bootstrap-suggest"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
 
-  <body>
+            <div class="navbar-brand">bootstrap-suggest</div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse ml-4" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#usage">Usage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#api">API</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Page Content -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="comment" class="font-weight-bold">Start typing with "@"</label>
+                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4"></div>
+        <div class="row">
+            <div class="col-lg-12">
+<!-- documentation -->
+<article class="markdown-body"><h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link"></a></h2>
+<h3 id="markup">Markup<a class="headerlink" href="#markup" title="Permanent link"></a></h3>
+<div class="codehilite"><pre><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;form-group&quot;</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&quot;comment&quot;</span><span class="p">&gt;</span>start typing with @<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">textarea</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;form-control&quot;</span> <span class="na">rows</span><span class="o">=</span><span class="s">&quot;5&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;comment&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">textarea</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</pre></div>
 
-      <a href="https://github.com/lodev09/bootstrap-suggest"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
-      <div class="container">
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#demo">Demo</a></li>
-            <li><a href="#api">API</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
+<h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link"></a></h3>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;lodev09&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;Jovanni Lo&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;Foo User&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;Bar User&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;twbs&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;Twitter Bootstrap&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;john&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;John Doe&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;jane&#39;</span><span class="p">,</span> <span class="nx">fullname</span><span class="o">:</span> <span class="s1">&#39;Jane Doe&#39;</span><span class="p">},</span>
+<span class="p">];</span>
+</pre></div>
+
+<h3 id="init">Init<a class="headerlink" href="#init" title="Permanent link"></a></h3>
+<div class="codehilite"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#comment&#39;</span><span class="p">).</span><span class="nx">suggest</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="nx">users</span><span class="p">,</span>
+  <span class="nx">map</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">value</span><span class="o">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="p">,</span>
+      <span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;&lt;strong&gt;&#39;</span><span class="o">+</span><span class="nx">user</span><span class="p">.</span><span class="nx">username</span><span class="o">+</span><span class="s1">&#39;&lt;/strong&gt; &lt;small&gt;&#39;</span><span class="o">+</span><span class="nx">user</span><span class="p">.</span><span class="nx">fullname</span><span class="o">+</span><span class="s1">&#39;&lt;/small&gt;&#39;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+
+<h4 id="via-promise-or-ajax">via Promise or ajax<a class="headerlink" href="#via-promise-or-ajax" title="Permanent link"></a></h4>
+<p>Ajax is supported by having the data function return a <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> object. The function takes a single parameter containing the mention text string.</p>
+<div class="codehilite"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#comment&#39;</span><span class="p">).</span><span class="nx">suggest</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;users/data.json&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">q</span><span class="o">:</span> <span class="nx">q</span> <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="c1">// ...</span>
+<span class="p">})</span>
+</pre></div>
+
+<h4 id="via-provide-function">via &ldquo;provide&rdquo; function<a class="headerlink" href="#via-provide-function" title="Permanent link"></a></h4>
+<p>A <code>provide</code> function is provided for you to call on after securing your data (don&rsquo;t return anything to the <code>data</code> option function to avoid conflict)
+<div class="codehilite"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#comment&#39;</span><span class="p">).</span><span class="nx">suggest</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">,</span> <span class="nx">provide</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;users/data.json&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">q</span><span class="o">:</span> <span class="nx">q</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// simply call provide and pass on your data!</span>
+        <span class="nx">provide</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="p">});</span>
+
+      <span class="c1">// we aren&#39;t returning any</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="c1">// ...</span>
+<span class="p">})</span>
+</pre></div></p>
+<h3 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link"></a></h3>
+<h4 id="add-delay-search-while-typing">Add delay search while typing<a class="headerlink" href="#add-delay-search-while-typing" title="Permanent link"></a></h4>
+<div class="codehilite"><pre><span class="nx">timeout</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#comment&#39;</span><span class="p">).</span><span class="nx">suggest</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">q</span><span class="p">,</span> <span class="nx">lookup</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">processData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="s2">&quot;users/lookup.json&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">q</span><span class="o">:</span> <span class="nx">q</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">lookup</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">timeout</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timeout</span><span class="p">);</span>
+      <span class="nx">timeout</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">timeout</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">processData</span><span class="p">,</span> <span class="mi">500</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="c1">// ...</span>
+<span class="p">})</span>
+</pre></div>
+
+<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link"></a></h2>
+<h3 id="initialize">Initialize<a class="headerlink" href="#initialize" title="Permanent link"></a></h3>
+<h4 id="single-suggest">Single suggest<a class="headerlink" href="#single-suggest" title="Permanent link"></a></h4>
+<p><code>$('#textarea').suggest(key [, options])</code></p>
+<h4 id="multiple-suggest">Multiple suggest<a class="headerlink" href="#multiple-suggest" title="Permanent link"></a></h4>
+<p><code>$('#textarea').suggest({key: options, key2: options})</code></p>
+<h3 id="options">Options<a class="headerlink" href="#options" title="Permanent link"></a></h3>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>type</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>array/function</td>
+<td>[]</td>
+<td>an array (of objects or string) or a callback function</td>
+</tr>
+<tr>
+<td>map</td>
+<td>callback</td>
+<td><em>undefined</em></td>
+<td>a callback function that is used to map the display and value of each item</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>object</td>
+<td 5="5" casesensitive:="casesensitive:" limit:="limit:" true_="true,"></td>
+<td>option that will let you set the filter behaviour</td>
+</tr>
+<tr>
+<td>onshow(e)</td>
+<td>event callback</td>
+<td><em>none</em></td>
+<td>triggered when the dropdown is shown</td>
+</tr>
+<tr>
+<td>onselect(e, item)</td>
+<td>event callback</td>
+<td><em>none</em></td>
+<td>triggered after selecting the item</td>
+</tr>
+<tr>
+<td>onlookup(e, item)</td>
+<td>event callback</td>
+<td><em>none</em></td>
+<td>triggered when searching for an item</td>
+</tr>
+<tr>
+<td>dropdownClass</td>
+<td>string</td>
+<td>&rdquo;&ldquo;</td>
+<td>additional class of the dropdown</td>
+</tr>
+<tr>
+<td>position</td>
+<td>string/object/function</td>
+<td>&ldquo;caret&rdquo;</td>
+<td>position of the dropdown menu. string values: <em>bottom</em>, <em>top</em>, <em>caret</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="events">Events<a class="headerlink" href="#events" title="Permanent link"></a></h3>
+<table>
+<thead>
+<tr>
+<th>event</th>
+<th>params</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>show</td>
+<td><em>none</em></td>
+<td>triggered when the dropdown is shown</td>
+</tr>
+<tr>
+<td>select</td>
+<td>object item</td>
+<td>triggered after selecting the item</td>
+</tr>
+<tr>
+<td>lookup</td>
+<td>object item</td>
+<td>triggered when searching for an item</td>
+</tr>
+</tbody>
+</table>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link"></a></h3>
+<div class="codehilite"><pre>$(&#39;#comments&#39;).suggest(&#39;@&#39;, &#39;lookup&#39;, &#39;...&#39;);
+</pre></div>
+
+<table>
+<thead>
+<tr>
+<th>method</th>
+<th>params</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>get</td>
+<td>int index</td>
+<td>returns an <code>object</code> item</td>
+</tr>
+<tr>
+<td>lookup</td>
+<td>string q</td>
+<td>search for an item given by the <code>q</code> (query) string</td>
+</tr>
+<tr>
+<td>show</td>
+<td></td>
+<td>show dropdown</td>
+</tr>
+<tr>
+<td>hide</td>
+<td></td>
+<td>hide dropdown</td>
+</tr>
+</tbody>
+</table>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link"></a></h3>
+<table>
+<thead>
+<tr>
+<th>property</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$element</td>
+<td>jQuery</td>
+<td>the element</td>
+</tr>
+<tr>
+<td>$items</td>
+<td>array</td>
+<td>items array (jquery objects)</td>
+</tr>
+<tr>
+<td>key</td>
+<td>string</td>
+<td>the main key</td>
+</tr>
+<tr>
+<td>isShown</td>
+<td>boolean</td>
+<td><code>true</code> if the dropdown is shown</td>
+</tr>
+<tr>
+<td>query</td>
+<td>string</td>
+<td>current <code>q</code> (query)</td>
+</tr>
+</tbody>
+</table></article>
+<!-- / documentation -->
+            </div>
+        </div>
     </div>
 
-    <!-- Begin page content -->
-    <div class="container">
-      <div class="page-header">
-        <h1 id="about">bootstrap-suggest</h1>
-      </div>
-      <p class="lead">A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox</p>
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap-suggest/bootstrap-suggest.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/highlight.js/highlight.js"></script>
 
-      <h2 id="demo">Demo</h2>
-      <div class="form-group">
-         <label for="comment">start typing with @</label>
-         <textarea class="form-control" rows="5" id="comment"></textarea>
-      </div>
-
-      <div class="markdown">
-
-### Markup
-```html
-<div class="form-group">
-   <label for="comment">start typing with @</label>
-   <textarea class="form-control" rows="5" id="comment"></textarea>
-</div>
-```
-
-### Data
-```
-var users = [
-  {username: 'lodev09', fullname: 'Jovanni Lo'},
-  {username: 'foo', fullname: 'Foo User'},
-  {username: 'bar', fullname: 'Bar User'},
-  {username: 'twbs', fullname: 'Twitter Bootstrap'},
-  {username: 'john', fullname: 'John Doe'},
-  {username: 'jane', fullname: 'Jane Doe'},
-];
-```
-
-### Init
-```javascript
-$('#comment').suggest('@', {
-  data: users,
-  map: function(user) {
-    return {
-      value: user.username,
-      text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
-    }
-  }
-})
-```
-
-#### via Promise or ajax
-Ajax is supported by having the data function return a <a href="http://api.jquery.com/Types/#jqXHR">jqXHR</a> object. The function takes a single parameter containing the mention text string.
-
-```javascript
-$('#comment').suggest('@', {
-  data: function(q) {
-    if (q) {
-      return $.getJSON("users/data.json", { q: q });
-    }
-  },
-  // ...
-})
-```
-
-#### via "provide" function
-A `provide` function is provided for you to call on after securing your data (don't return anything to the `data` option function to avoid conflict)
-```javascript
-$('#comment').suggest('@', {
-  data: function(q, provide) {
-    if (q) {
-      $.getJSON("users/data.json", { q: q }, function(data) {
-        // simply call provide and pass on your data!
-        provide.call(data);
-      });
-
-      // we aren't returning any
-    }
-  },
-  // ...
-})
-```
-
-### Advanced
-#### Add delay search while typing
-```javascript
-timeout = null;
-$('#comment').suggest('@', {
-  data: function(q, lookup) {
-    var processData = function() {
-      $.getJSON("users/lookup.json", { q: q }, function(data) {
-        lookup.call(data);
-      });
-    };
-
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-
-    timeout = setTimeout(processData, 500);
-  },
-  // ...
-})
-
-```
-
-      </div>
-      <h2 id="api">API</h2>
-      <div class="markdown">
-### Initialize
-#### Single suggest
-`$('#textarea').suggest(key [, options])`
-#### Multiple suggest
-`$('#textarea').suggest({key: options, key2: options})`
-
-### Options
-| option            | type                   | default                          | description                                                                |
-| --                | ---                    | ---                              | ---                                                                        |
-| data              | array/function         | []                               | an array (of objects or string) or a callback function                     |
-| map               | callback               | _undefined_                      | a callback function that is used to map the display and value of each item |
-| filter            | object                 | { casesensitive: true, limit: 5} | option that will let you set the filter behaviour                          |
-| onshow(e)         | event callback         | _none_                           | triggered when the dropdown is shown                                       |
-| onselect(e, item) | event callback         | _none_                           | triggered after selecting the item                                         |
-| onlookup(e, item) | event callback         | _none_                           | triggered when searching for an item                                       |
-| dropdownClass     | string                 | ""                               | additional class of the dropdown                                           |
-| position          | string/object/function | "caret"                          | position of the dropdown menu. string values: _bottom_, _top_, _caret_     |
-
-
-### Events
-| event  | params      | description                          |
-| ---    | ---         | ---                                  |
-| show   | _none_      | triggered when the dropdown is shown |
-| select | object item | triggered after selecting the item   |
-| lookup | object item | triggered when searching for an item |
-
-### Methods
-```
-$('#comments').suggest('@', 'lookup', '...');
-```
-| method | params    | description                                        |
-| ---    | ---       | ---                                                |
-| get    | int index | returns an `object` item                           |
-| lookup | string q  | search for an item given by the `q` (query) string |
-| show   |           | show dropdown                                      |
-| hide   |           | hide dropdown                                      |
-
-
-### Properties
-| property | type    | description                     |
-| ---      | ---     | ---                             |
-| $element | jQuery  | the element                     |
-| $items   | array   | items array (jquery objects)    |
-| key      | string  | the main key                    |
-| isShown  | boolean | `true` if the dropdown is shown |
-| query    | string  | current `q` (query)             |
-
-
-      </div>
-    </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-
-	<!-- marked -->
-	<script src="js/marked.min.js"></script>
-	<script src="js/highlight.pack.js"></script>
-
-	<!-- plugin script -->
-	<script src="bower_components/bootstrap-suggest/bootstrap-suggest.js"></script>
     <script>
-      hljs.initHighlightingOnLoad();
-    	// configure marked
-  		var renderer = new marked.Renderer();
-  		renderer.table = function (header, body) {
-  			return '\
-  				<table class="table table-bordered table-striped table-hover">\
-  					<thead>\
-  						' + header + '\
-  					</thead>\
-  					<tbody>\
-  						' + body + '\
-  					</tbody>\
-  				</table>';
-  		},
+        $(function() {
 
-  		marked.setOptions({
-  			sanitize: false,
-  			highlight: function (code) {
-  		    	return hljs.highlightAuto(code).value;
-  		  	},
-  		  	renderer: renderer,
-  		  	breaks: true
-  		});
+            hljs.configure({ useBR: true });
+            $('pre code').each(function(e) {
+                hljs.highlightBlock(this);
+            })
 
-      	$.fn.extend({
-      		marked: function() {
-  				this.each(function() {
-  					$this = $(this);
-  					$this.html(marked($this.html()));
-  				})
+            // data
+            var users = [
+                {username: 'lodev09', fullname: 'Jovanni Lo'},
+                {username: 'foo', fullname: 'Foo User'},
+                {username: 'bar', fullname: 'Bar User'},
+                {username: 'twbs', fullname: 'Twitter Bootstrap'},
+                {username: 'john', fullname: 'John Doe'},
+                {username: 'jane', fullname: 'Jane Doe'},
+            ];
 
-  				return this;
-  			},
-      	});
-
-      	$(function() {
-
-      	  $('.markdown').marked();
-
-          // data
-          var users = [
-            {username: 'lodev09', fullname: 'Jovanni Lo'},
-            {username: 'foo', fullname: 'Foo User'},
-            {username: 'bar', fullname: 'Bar User'},
-            {username: 'twbs', fullname: 'Twitter Bootstrap'},
-            {username: 'john', fullname: 'John Doe'},
-            {username: 'jane', fullname: 'Jane Doe'},
-          ];
-
-          $('#comment').suggest('@', {
-            data: users,
-            map: function(user) {
-              return {
-                value: user.username,
-                text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
-              }
-            }
-          })
-      	})
+            $('#comment').suggest('@', {
+                data: users,
+                map: function(user) {
+                    return {
+                        value: user.username,
+                        text: '<strong>'+user.username+'</strong> <small>'+user.fullname+'</small>'
+                    }
+                }
+            })
+        })
     </script>
-  </body>
+</body>
 </html>

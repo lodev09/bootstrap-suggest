@@ -1,0 +1,18 @@
+.suggest {
+	/* position: relative; */
+	top: 7px;
+	z-index: 30;
+	text-align: left;
+
+	> .dropdown-menu {
+		margin-top: 15px;
+		position: absolute;
+
+		> a.dropdown-item {
+			border-bottom: 1px solid #eeeeee;
+			padding: 5px 10px;
+
+			&:not(.d-none):last-child { border-bottom: 0; }
+		}
+	}
+}
