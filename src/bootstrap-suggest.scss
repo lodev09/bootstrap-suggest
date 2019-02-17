@@ -7,17 +7,12 @@
 	> .dropdown-menu {
 		margin-top: 15px;
 		position: absolute;
-		padding: 0;
 
-		> li {
+		> a.dropdown-item {
 			border-bottom: 1px solid #eeeeee;
-			> a {
-				padding: 5px 10px;
-				cursor: default;
-			}
+			padding: 5px 10px;
 
-			> a:hover *, &.active > a * { color: inherit !important; }
-			&:last-child { border-bottom: 0; }
+			&:not(.d-none):last-child { border-bottom: 0; }
 		}
 	}
 }

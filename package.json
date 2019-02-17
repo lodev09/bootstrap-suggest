@@ -1,10 +1,10 @@
 {
   "name": "bootstrap-suggest",
-  "version": "1.3.8",
-  "description": "A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textbox",
-  "style": "bootstrap-suggest.css",
-  "less": "bootstrap-suggest.less",
-  "main": "bootstrap-suggest.js",
+  "version": "2.0.0",
+  "description": "A bootstrap plugin for your mention needs.",
+  "style": "dist/bootstrap-suggest.css",
+  "sass": "src/bootstrap-suggest.scss",
+  "main": "dist/bootstrap-suggest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,5 +29,15 @@
     "bootstrap": "^4.3",
     "jquery": "^3.3",
     "jquery.caret": "^0.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "6.0.0",
+    "gulp-clean-css": "3.10.0",
+    "gulp-header": "2.0.5",
+    "gulp-rename": "1.4.0",
+    "gulp-sass": "4.0.1",
+    "gulp-uglify": "3.0.1"
   }
 }

@@ -8,7 +8,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-* http://www.apache.org/licenses/LICENSE-2.0
+* http://opensource.org/licenses/MIT
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@
 
         this.$dropdown = $('<div />', {
             'class': 'dropdown suggest ' + this.options.dropdownClass,
-            'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
+            'html': $('<div />', {'class': 'dropdown-menu', role: 'menu'}),
             'data-key': this.key
         });
 
@@ -119,8 +119,7 @@
                 style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
                 // transfer the element's properties to the div
-                $.each(properties, function (index, value)
-                {
+                $.each(properties, function (index, value) {
                     style[value] = computed[value];
                 });
 
@@ -197,7 +196,7 @@
         },
 
         __getVisibleItems: function() {
-            return this.$items ? this.$items.not('.hidden') : $();
+            return this.$items ? this.$items.not('.d-none') : $();
         },
 
         __build: function() {
@@ -209,73 +208,68 @@
                 that.hide();
             }
 
-            $dropdown
-            .on('click', 'li:has(a)', function(e) {
+            $dropdown.on('click', 'a.dropdown-item', function(e) {
                 e.preventDefault();
                 that.__select($(this).index());
                 that.$element.focus();
-            })
-            .on('mouseover', 'li:has(a)', function(e) {
+            }).on('mouseover', 'a.dropdown-item', function(e) {
                 that.$element.off('blur', blur);
-            })
-            .on('mouseout', 'li:has(a)', function(e) {
+            }).on('mouseout', 'a.dropdown-item', function(e) {
                 that.$element.on('blur', blur);
             });
 
-            this.$element.before($dropdown)
-                .on('blur', blur)
-                .on('keydown', function(e) {
-                    var $visibleItems;
-                    if (that.isShown) {
-                        switch (e.keyCode) {
-                            case 13: // enter key
-                                $visibleItems = that.__getVisibleItems();
-                                $visibleItems.each(function(index) {
-                                    if ($(this).is('.active'))
-                                    that.__select($(this).index());
-                                });
+            this.$element.before($dropdown).on('blur', blur).on('keydown', function(e) {
+                var $visibleItems;
+                if (that.isShown) {
+                    switch (e.keyCode) {
+                        case 13: // enter key
+                            $visibleItems = that.__getVisibleItems();
+                            $visibleItems.each(function(index) {
+                                if ($(this).is('.active'))
+                                that.__select($(this).index());
+                            });
 
-                                return false;
-                                break;
-                            case 40: // arrow down
-                                $visibleItems = that.__getVisibleItems();
-                                if ($visibleItems.last().is('.active')) return false;
-                                $visibleItems.each(function(index) {
-                                    var $this = $(this),
-                                    $next = $visibleItems.eq(index + 1);
+                            return false;
+                            break;
+                        case 40: // arrow down
+                            $visibleItems = that.__getVisibleItems();
+                            if ($visibleItems.last().is('.active')) return false;
+                            $visibleItems.each(function(index) {
+                                var $this = $(this),
+                                $next = $visibleItems.eq(index + 1);
 
-                                    //if (!$next.length) return false;
+                                //if (!$next.length) return false;
 
-                                    if ($this.is('.active')) {
-                                        if (!$next.is('.hidden')) {
-                                            $this.removeClass('active');
-                                            $next.addClass('active');
-                                        }
-                                        return false;
+                                if ($this.is('.active')) {
+                                    if (!$next.is('.d-none')) {
+                                        $this.removeClass('active');
+                                        $next.addClass('active');
                                     }
-                                });
-                                return false;
-                            case 38: // arrow up
-                                $visibleItems = that.__getVisibleItems();
-                                if ($visibleItems.first().is('.active')) return false;
-                                $visibleItems.each(function(index) {
-                                    var $this = $(this),
-                                    $prev = $visibleItems.eq(index - 1);
+                                    return false;
+                                }
+                            });
+                            return false;
+                        case 38: // arrow up
+                            $visibleItems = that.__getVisibleItems();
+                            if ($visibleItems.first().is('.active')) return false;
+                            $visibleItems.each(function(index) {
+                                var $this = $(this),
+                                $prev = $visibleItems.eq(index - 1);
 
-                                    //if (!$prev.length) return false;
+                                //if (!$prev.length) return false;
 
-                                    if ($this.is('.active')) {
-                                        if (!$prev.is('.hidden')) {
-                                            $this.removeClass('active');
-                                            $prev.addClass('active');
-                                        }
-                                        return false;
+                                if ($this.is('.active')) {
+                                    if (!$prev.is('.d-none')) {
+                                        $this.removeClass('active');
+                                        $prev.addClass('active');
                                     }
-                                })
-                                return false;
-                        }
+                                    return false;
+                                }
+                            })
+                            return false;
                     }
-                });
+                }
+            });
 
         },
 
@@ -299,10 +293,12 @@
                 _item.value = dataItem;
             }
 
-            return $('<li />', {'data-value': _item.value}).html($('<a />', {
+            return $('<a />', {
+                'class': 'dropdown-item',
+                'data-value': _item.value,
                 href: '#',
                 html: _item.text
-            }));
+            });
         },
 
         __select: function(index) {
@@ -352,7 +348,7 @@
                 }
             }
 
-            return $dropdownMenu.find('li:has(a)');
+            return $dropdownMenu.find('a.dropdown-item');
         },
 
         __lookup: function(q, $resultItems) {
@@ -369,21 +365,20 @@
         __filterData: function(q, data) {
             var options = this.options;
 
-            this.$items.addClass('hidden');
+            this.$items.addClass('d-none');
             this.$items.filter(function (index) {
 
                 // return the limit if q is empty
                 if (q === '') return index < options.filter.limit;
 
-                var $this = $(this),
-                value = $this.find('a:first').text();
+                var value = $(this).text();
 
                 if (!options.filter.casesensitive) {
                     value = value.toLowerCase();
                     q = q.toLowerCase();
                 }
                 return value.indexOf(q) != -1;
-            }).slice(0, options.filter.limit).removeClass('hidden active');
+            }).slice(0, options.filter.limit).removeClass('d-none active');
             return this.__getVisibleItems();
         },
 
@@ -392,7 +387,7 @@
 
             var $item = this.$items.eq(index);
             return {
-                text: $item.children('a:first').text(),
+                text: $item.text(),
                 value: $item.attr('data-value'),
                 index: index,
                 $element: $item
@@ -435,7 +430,7 @@
         },
 
         hide: function() {
-            this.$dropdown.removeClass('open');
+            this.$dropdown.find('.dropdown-menu').removeClass('show');
             this.isShown = false;
             if(this.$items) {
                 this.$items.removeClass('active');
@@ -458,7 +453,7 @@
 
             if (!this.isShown) {
 
-                this.$dropdown.addClass('open');
+                $dropdownMenu.addClass('show');
                 if (options.position !== false) {
 
                     caretPos = this.__getCaretPos(this._keyPos);
