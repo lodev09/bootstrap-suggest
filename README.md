@@ -4,6 +4,9 @@ A jQuery plugin for bootstrap that pops-up a dropdown in textarea or input textb
 
 ![demo](demo.jpg "demo")
 
+## V2
+The version 2 of this plugin now supports bootstrap 4 and `contenteditable` that uses `jquery.caret` (optional).
+
 ## Install
 Several quick start options are available:
 
