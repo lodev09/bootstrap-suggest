@@ -9,10 +9,10 @@
 		position: absolute;
 
 		> a.dropdown-item {
-			border-bottom: 1px solid #eeeeee;
+			border-top: 1px solid #eeeeee;
 			padding: 5px 10px;
 
-			&:not(.d-none):last-child { border-bottom: 0; }
+			&:first-child { border-top: 0; }
 		}
 	}
 }
