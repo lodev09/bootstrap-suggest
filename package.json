@@ -25,13 +25,13 @@
         "url": "https://github.com/lodev09/bootstrap-suggest.git"
     },
     "dependencies": {
-        "bootstrap": "4.3",
-        "bootstrap-suggest": "^2.0.1",
+        "bootstrap": "4.4",
+        "bootstrap-suggest": "^2.1",
         "highlight.js": "^9.14",
-        "jquery": "3.3"
+        "jquery": "^3.4"
     },
     "devDependencies": {
-        "browser-sync": "2.26.3",
+        "browser-sync": "^2.26.7",
         "gulp": "4.0.0"
     }
 }

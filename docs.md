@@ -108,6 +108,8 @@ $('#comment').suggest('@', {
 | onlookup(e, item) | event callback         | _none_                           | triggered when searching for an item                                       |
 | dropdownClass     | string                 | ""                               | additional class of the dropdown                                           |
 | position          | string/object/function | "caret"                          | position of the dropdown menu. string values: _bottom_, _top_, _caret_     |
+| endKey            | string                 | ""                               | string key that will append at the selected values                         |
+| respectWhitespace | boolean                | true                             | ignore whitespace restriction so whitespace is included in filtering when backspacing and also doesnt require a space between suggest usage|
 
 
 ### Events
