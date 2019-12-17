@@ -26,13 +26,13 @@
   },
   "homepage": "https://github.com/lodev09/bootstrap-suggest#readme",
   "dependencies": {
-    "bootstrap": "^4.3",
-    "jquery": "^3.3",
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
     "jquery.caret": "^0.3"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.3",
-    "gulp": "^4.0.0",
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "6.0.0",
     "gulp-clean-css": "3.10.0",
     "gulp-header": "2.0.5",
