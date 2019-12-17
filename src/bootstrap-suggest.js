@@ -180,12 +180,13 @@
 
             for (var i = currentPos; i >= 0; i--) {
                 var subChar = $.trim(val.substring(i-1, i));
-                if (!subChar) {
+                if (!subChar && this.options.respectWhitespace) {
                     this.hide();
                     break;
                 }
 
-                if (subChar === this.key && $.trim(val.substring(i-2, i-1)) == '') {
+                var isSpaceBefore = $.trim(val.substring(i - 2, i - 1)) == '';
+                if (subChar === this.key && (isSpaceBefore || !this.options.respectWhitespace)) {
                     this.query = val.substring(i, currentPos);
                     this._queryPos = [i, currentPos];
                     this._keyPos = i;
@@ -277,7 +278,8 @@
             var itemHtml, that = this,
                 _item = {
                     text: '',
-                    value: ''
+                    value: '',
+                    class: ''
                 };
 
             if (this.options.map) {
@@ -288,13 +290,15 @@
             if (dataItem instanceof Object) {
                 _item.text = dataItem.text || '';
                 _item.value = dataItem.value || '';
+                _item.class = dataItem.class || '';
             } else {
                 _item.text = dataItem;
                 _item.value = dataItem;
+                _item.class = dataItem;
             }
 
             return $('<a />', {
-                'class': 'dropdown-item',
+                'class': 'dropdown-item' + ' ' + _item.class,
                 'data-value': _item.value,
                 href: '#',
                 html: _item.text
@@ -302,13 +306,14 @@
         },
 
         __select: function(index) {
+            var endKey = this.options.endKey || '';
             var $el = this.$element,
                 el = $el.get(0),
                 val = $el.val(),
                 item = this.get(index),
                 setCaretPos = this._keyPos + item.value.length + 1;
 
-            $el.val(val.slice(0, this._keyPos) + item.value + ' ' + val.slice(this.__getSelection(el).start));
+                $el.val(val.slice(0, this._keyPos) + item.value + endKey + ' ' + val.slice(this.__getSelection(el).start));
 
             if (el.setSelectionRange) {
                 el.setSelectionRange(setCaretPos, setCaretPos);
@@ -372,12 +377,14 @@
                 if (q === '') return index < options.filter.limit;
 
                 var value = $(this).text();
+                var selectorValue = $(this).data().value;
 
                 if (!options.filter.casesensitive) {
                     value = value.toLowerCase();
                     q = q.toLowerCase();
+                    selectorValue = selectorValue.toLowerCase();
                 }
-                return value.indexOf(q) != -1;
+                return value.indexOf(q) != -1 || selectorValue.indexOf(q) != -1;
             }).slice(0, options.filter.limit).removeClass('d-none active');
             return this.__getVisibleItems();
         },
@@ -574,6 +581,8 @@
         },
         dropdownClass: '',
         position: 'caret',
+        endKey: '',
+        respectWhitespace: true,
         // events hook
         onshow: function(e) {},
         onselect: function(e, item) {},
