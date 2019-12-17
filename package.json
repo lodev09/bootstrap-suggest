@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-suggest",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "A bootstrap plugin for your mention needs.",
   "style": "dist/bootstrap-suggest.css",
   "sass": "src/bootstrap-suggest.scss",
