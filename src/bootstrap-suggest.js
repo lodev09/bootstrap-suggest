@@ -314,6 +314,7 @@
                 setCaretPos = this._keyPos + item.value.length + 1;
 
                 $el.val(val.slice(0, this._keyPos) + item.value + endKey + ' ' + val.slice(this.__getSelection(el).start));
+                $el.blur();
 
             if (el.setSelectionRange) {
                 el.setSelectionRange(setCaretPos, setCaretPos);
