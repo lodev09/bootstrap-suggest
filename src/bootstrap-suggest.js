@@ -294,7 +294,6 @@
             } else {
                 _item.text = dataItem;
                 _item.value = dataItem;
-                _item.class = dataItem;
             }
 
             return $('<a />', {
