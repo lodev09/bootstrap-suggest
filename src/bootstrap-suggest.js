@@ -224,6 +224,7 @@
                 if (that.isShown) {
                     switch (e.keyCode) {
                         case 13: // enter key
+                        case 9: // tab key 
                             $visibleItems = that.__getVisibleItems();
                             $visibleItems.each(function(index) {
                                 if ($(this).is('.active'))
