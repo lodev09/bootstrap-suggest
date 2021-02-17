@@ -14,6 +14,8 @@
 .suggest > .dropdown-menu {
   margin-top: 15px;
   position: absolute;
+  height: 200px;
+  overflow-y: scroll
 }
 
 .suggest > .dropdown-menu > a.dropdown-item {
@@ -24,3 +26,4 @@
 .suggest > .dropdown-menu > a.dropdown-item:first-child {
   border-top: 0;
 }
+

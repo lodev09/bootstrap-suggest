@@ -1,5 +1,6 @@
 /* ===================================================
 * bootstrap-suggest.js
+* v2.0.3
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
 * Copyright 2019 Jovanni Lo @lodev09
@@ -35,7 +36,7 @@
 
         this.$dropdown = $('<div />', {
             'class': 'dropdown suggest ' + this.options.dropdownClass,
-            'html': $('<div />', {'class': 'dropdown-menu', role: 'menu'}),
+			'html': $('<ul />', {'class': 'dropdown-menu', role: 'menu'}),
             'data-key': this.key
         });
 
@@ -180,13 +181,12 @@
 
             for (var i = currentPos; i >= 0; i--) {
                 var subChar = $.trim(val.substring(i-1, i));
-                if (!subChar && this.options.respectWhitespace) {
+                if (!subChar) {
                     this.hide();
                     break;
                 }
 
-                var isSpaceBefore = $.trim(val.substring(i - 2, i - 1)) == '';
-                if (subChar === this.key && (isSpaceBefore || !this.options.respectWhitespace)) {
+                if (subChar === this.key && $.trim(val.substring(i-2, i-1)) == '') {
                     this.query = val.substring(i, currentPos);
                     this._queryPos = [i, currentPos];
                     this._keyPos = i;
@@ -209,13 +209,16 @@
                 that.hide();
             }
 
-            $dropdown.on('click', 'a.dropdown-item', function(e) {
+			$dropdown
+			.on('click', 'li:has(a)', function(e) {
                 e.preventDefault();
                 that.__select($(this).index());
                 that.$element.focus();
-            }).on('mouseover', 'a.dropdown-item', function(e) {
+			})
+			.on('mouseover', 'li:has(a)', function(e) {
                 that.$element.off('blur', blur);
-            }).on('mouseout', 'a.dropdown-item', function(e) {
+			})
+			.on('mouseout', 'li:has(a)', function(e) {
                 that.$element.on('blur', blur);
             });
 
@@ -224,7 +227,6 @@
                 if (that.isShown) {
                     switch (e.keyCode) {
                         case 13: // enter key
-                        case 9: // tab key 
                             $visibleItems = that.__getVisibleItems();
                             $visibleItems.each(function(index) {
                                 if ($(this).is('.active'))
@@ -243,7 +245,7 @@
                                 //if (!$next.length) return false;
 
                                 if ($this.is('.active')) {
-                                    if (!$next.is('.d-none')) {
+									if (!$next.is('.hidden')) {
                                         $this.removeClass('active');
                                         $next.addClass('active');
                                     }
@@ -261,7 +263,7 @@
                                 //if (!$prev.length) return false;
 
                                 if ($this.is('.active')) {
-                                    if (!$prev.is('.d-none')) {
+									if (!$prev.is('.hidden')) {
                                         $this.removeClass('active');
                                         $prev.addClass('active');
                                     }
@@ -279,8 +281,7 @@
             var itemHtml, that = this,
                 _item = {
                     text: '',
-                    value: '',
-                    class: ''
+                    value: ''
                 };
 
             if (this.options.map) {
@@ -291,30 +292,25 @@
             if (dataItem instanceof Object) {
                 _item.text = dataItem.text || '';
                 _item.value = dataItem.value || '';
-                _item.class = dataItem.class || '';
             } else {
                 _item.text = dataItem;
                 _item.value = dataItem;
             }
 
-            return $('<a />', {
-                'class': 'dropdown-item' + ' ' + _item.class,
-                'data-value': _item.value,
+			return $('<li />', {'data-value': _item.value}).html($('<a />', {
                 href: '#',
                 html: _item.text
-            });
+			})).addClass('dropdown-item');
         },
 
         __select: function(index) {
-            var endKey = this.options.endKey || '';
             var $el = this.$element,
                 el = $el.get(0),
                 val = $el.val(),
                 item = this.get(index),
                 setCaretPos = this._keyPos + item.value.length + 1;
 
-                $el.val(val.slice(0, this._keyPos) + item.value + endKey + ' ' + val.slice(this.__getSelection(el).start));
-                $el.blur();
+			$el.val(val.slice(0, this._keyPos) + item.value + "\n" + val.slice(this.__getSelection(el).start));
 
             if (el.setSelectionRange) {
                 el.setSelectionRange(setCaretPos, setCaretPos);
@@ -353,8 +349,7 @@
                     }
                 }
             }
-
-            return $dropdownMenu.find('a.dropdown-item');
+			return $dropdownMenu.find('li:has(a)');
         },
 
         __lookup: function(q, $resultItems) {
@@ -370,23 +365,21 @@
 
         __filterData: function(q, data) {
             var options = this.options;
-
-            this.$items.addClass('d-none');
+			this.$items.addClass('hidden');
             this.$items.filter(function (index) {
 
                 // return the limit if q is empty
                 if (q === '') return index < options.filter.limit;
 
-                var value = $(this).text();
-                var selectorValue = $(this).data().value;
+				var $this = $(this),
+				value = $this.find('a:first').text();
 
                 if (!options.filter.casesensitive) {
                     value = value.toLowerCase();
                     q = q.toLowerCase();
-                    selectorValue = selectorValue.toLowerCase();
                 }
-                return value.indexOf(q) != -1 || selectorValue.indexOf(q) != -1;
-            }).slice(0, options.filter.limit).removeClass('d-none active');
+                return value.indexOf(q) != -1;
+			}).slice(0, options.filter.limit).removeClass('hidden active');
             return this.__getVisibleItems();
         },
 
@@ -395,7 +388,7 @@
 
             var $item = this.$items.eq(index);
             return {
-                text: $item.text(),
+				text: $item.children('a:first').text(),
                 value: $item.attr('data-value'),
                 index: index,
                 $element: $item
@@ -438,7 +431,7 @@
         },
 
         hide: function() {
-            this.$dropdown.find('.dropdown-menu').removeClass('show');
+			this.$dropdown.removeClass('open show');
             this.isShown = false;
             if(this.$items) {
                 this.$items.removeClass('active');
@@ -461,7 +454,7 @@
 
             if (!this.isShown) {
 
-                $dropdownMenu.addClass('show');
+				this.$dropdown.addClass('open show');
                 if (options.position !== false) {
 
                     caretPos = this.__getCaretPos(this._keyPos);
@@ -582,8 +575,6 @@
         },
         dropdownClass: '',
         position: 'caret',
-        endKey: '',
-        respectWhitespace: true,
         // events hook
         onshow: function(e) {},
         onselect: function(e, item) {},

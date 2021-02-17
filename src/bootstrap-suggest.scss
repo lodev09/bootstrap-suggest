@@ -7,6 +7,8 @@
 	> .dropdown-menu {
 		margin-top: 15px;
 		position: absolute;
+	    height: 200px;
+        overflow-y: scroll;
 
 		> a.dropdown-item {
 			border-top: 1px solid #eeeeee;
