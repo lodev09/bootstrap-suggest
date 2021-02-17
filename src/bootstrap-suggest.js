@@ -1,6 +1,5 @@
 /* ===================================================
-* bootstrap-suggest.js
-* v2.0.3
+* bootstrap-suggest.js v2.0.3
 * http://github.com/lodev09/bootstrap-suggest
 * ===================================================
 * Copyright 2019 Jovanni Lo @lodev09
@@ -310,7 +309,7 @@
                 item = this.get(index),
                 setCaretPos = this._keyPos + item.value.length + 1;
 
-			$el.val(val.slice(0, this._keyPos) + item.value + "\n" + val.slice(this.__getSelection(el).start));
+			$el.val(val.slice(0, this._keyPos) + item.value + this.options.endKey + val.slice(this.__getSelection(el).start));
 
             if (el.setSelectionRange) {
                 el.setSelectionRange(setCaretPos, setCaretPos);
@@ -573,6 +572,7 @@
             casesensitive: false,
             limit: 5
         },
+        endKey: ' ',
         dropdownClass: '',
         position: 'caret',
         // events hook
