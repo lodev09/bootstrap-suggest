@@ -1,5 +1,5 @@
 /*!
- * bootstra-suggest -  v2.0.1 (https://github.com/lodev09/bootstrap-suggest#readme)
+ * bootstra-suggest -  v2.0.3 (https://github.com/lodev09/bootstrap-suggest#readme)
  * Copyright 2013-2019 Jovanni Lo (lodev09@gmail.com)
  * Licensed under MIT (https://github.com/lodev09/bootstrap-suggest/blob/master/LICENSE)
  */
@@ -14,6 +14,8 @@
 .suggest > .dropdown-menu {
   margin-top: 15px;
   position: absolute;
+  height: 200px;
+  overflow-y: scroll
 }
 
 .suggest > .dropdown-menu > a.dropdown-item {
@@ -24,3 +26,4 @@
 .suggest > .dropdown-menu > a.dropdown-item:first-child {
   border-top: 0;
 }
+
